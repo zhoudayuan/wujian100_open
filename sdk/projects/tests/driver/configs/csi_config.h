@@ -9,4 +9,6 @@
 #define CONFIG_ARCH_INTERRUPTSTACK 4096
 #define CONFIG_NEWLIB_WRAP 1
 #define CONFIG_USER_DEFINED_LD_DIR_STR ""
+/*----test----*/
+#define RYAM001A_TEST_DEL  0
 #endif

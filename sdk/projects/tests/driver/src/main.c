@@ -14,6 +14,7 @@
 #include <dtest.h>
 #include <test_driver_config.h>
 
+extern int test_can(void);
 extern int test_usart(void);
 extern int test_spu_usart(void);
 extern int test_usi_usart(void);
@@ -50,6 +51,11 @@ extern void syslog_init(void);
 
 int dtest_main(void)
 {
+#if defined(TEST_CAN)
+    test_can();
+#endif
+
+#if RYAM001A_TEST_DEL
 #if defined(TEST_USART)
     test_usart();
 #endif
@@ -173,6 +179,8 @@ int dtest_main(void)
     test_memory();
 #endif
 
+#endif
+
     return 0;
 }
 
@@ -183,16 +191,16 @@ int __attribute__((weak)) main(void)
 #ifdef DRIVER_TEST_LOOP_COUNT   /* <0 means loop forever */
     loop_count = DRIVER_TEST_LOOP_COUNT;
 #endif
-
     do {
         printf("*** test drivers round-%d ***\n", round);
         dtest_init();
+#if RYAM001A_TEST_DEL
         dtest_main();
         dtest_run();
         dtest_print_result();
         dtest_cleanup();
         round++;
-
+#endif
         if (loop_count > 0) {
             loop_count--;
         }

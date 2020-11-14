@@ -18,11 +18,14 @@
 extern "C" {
 #endif
 
+#define CONFIG_CAN_NUM   2
+
+#define TEST_CAN    1
 #define TEST_TIMER  1
 #define TEST_USART  1
 #define TEST_GPIO   1
-#define TEST_IIC        1
-#define TEST_SPI        1
+#define TEST_IIC    1
+#define TEST_SPI    1
 #define TEST_PWM    1
 #define TEST_DMAC   1
 #define TEST_RTC    1
@@ -85,7 +88,13 @@ extern "C" {
 #define SPI_TEST_W25Q64FV_SECTOR_ERASE_EN   0x1
 #define SPI_TEST_W25Q64FV_PROGRAM_EN        0x1
 #define SPI_TEST_W25Q64FV_READ_EN           0x1
-#define SPI_TEST_CONFIG_INTERFACE_EN         0x1
+#define SPI_TEST_CONFIG_INTERFACE_EN        0x1
+
+
+/* CAN case config */
+#define CAN_TEST_FUN_EN       	0x1
+#define CAN_TEST_INTERFACE_EN 	0x1
+
 
 #ifdef __cplusplus
 }

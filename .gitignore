@@ -1,0 +1,11 @@
+*.d
+*.S
+*.o
+*.elf
+*.tags
+*.db
+*.cdkws
+*.orig
+*.session
+
+

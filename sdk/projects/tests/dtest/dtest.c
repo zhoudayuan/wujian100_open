@@ -98,15 +98,13 @@ dtest_suite_t *dtest_add_suite(dtest_suite_info_t *info)
         return NULL;
     }
 
-    test_suite->name = info->name;
-    test_suite->init = info->init;
-    test_suite->cleanup = info->cleanup;
-    test_suite->setup = info->setup;
+    test_suite->name     = info->name;
+    test_suite->init     = info->init;
+    test_suite->cleanup  = info->cleanup;
+    test_suite->setup    = info->setup;
     test_suite->teardown = info->teardown;
-
-    test_suite->next = context.list.next;
-    context.list.next = test_suite;
-
+    test_suite->next     = context.list.next;
+    context.list.next    = test_suite;
     return test_suite;
 }
 
@@ -129,8 +127,8 @@ int dtest_add_cases(dtest_suite_t *test_suite, dtest_case_info_t info_array[])
             return -1;
         }
 
-        test_case->name = info_array[i].name;
-        test_case->proc = info_array[i].proc;
+        test_case->name  = info_array[i].name;
+        test_case->proc  = info_array[i].proc;
         test_case->bopen = info_array[i].bopen;
 
         test_case->next = test_suite->list.next;
