@@ -9,13 +9,23 @@
 #include <test_driver_config.h>
 
 
+
+
+void test_pin_can_init(void)
+{
+#if 0
+    drv_pinmux_config(TEST_PIN_USART_TX, TEST_PIN_USART_TX_FUNC);
+    drv_pinmux_config(TEST_PIN_USART_RX, TEST_PIN_USART_RX_FUNC);
+#endif
+}
+
+
+
+
 #if (CONFIG_CAN_NUM >= 2)
 
-static void can_test_fun(void)
+static void test_can_fun(void)
 {
-
-
-
 
 #if  0
     int32_t baud[]         = { 4800, 9600, 14400, 19200, 38400, 56000, 57600, 115200};
@@ -40,15 +50,17 @@ static void can_test_fun(void)
 
 
 
-static void can_test_interfaces(void)
+static void test_can_interfaces(void)
 {
+
 #if 0
     usart_handle_t pcsi_usart;
+
     uint8_t i;
     uint32_t ret;
     uint8_t answer[20];
 
-    test_pin_usart_init();
+//    test_pin_usart_init();
     pcsi_usart = csi_usart_initialize(TEST_USART_IDX, NULL);
     ASSERT_TRUE(pcsi_usart != NULL);
 
@@ -57,13 +69,47 @@ static void can_test_interfaces(void)
         ASSERT_TRUE(ret == usart_cases[i].expect_out);
     }
 
+
     ASSERT_TRUE(csi_usart_send(NULL, data, 13/*,bool asynch*/) != 0);
     ASSERT_TRUE(csi_usart_receive(NULL, answer, 13/*,bool asynch*/) != 0);
     ASSERT_TRUE(csi_usart_abort_send(NULL) != 0);
     ASSERT_TRUE(csi_usart_abort_receive(NULL) != 0);
     ASSERT_TRUE(csi_usart_uninitialize(NULL) != 0);
+
 #endif
 }
+
+
+static void test_can_rw_reg(void)
+{
+	csi_can_initialize();
+
+#if 0
+    usart_handle_t pcsi_usart;
+
+    uint8_t i;
+    uint32_t ret;
+    uint8_t answer[20];
+
+//    test_pin_usart_init();
+    pcsi_usart = csi_usart_initialize(TEST_USART_IDX, NULL);
+    ASSERT_TRUE(pcsi_usart != NULL);
+
+    for (i = 0; i < sizeof(usart_cases) / sizeof(usart_test_t); i++) {
+        ret = csi_usart_config(pcsi_usart, usart_cases[i].baud, usart_cases[i].mode, usart_cases[i].parity, usart_cases[i].stopbits, usart_cases[i].bits);
+        ASSERT_TRUE(ret == usart_cases[i].expect_out);
+    }
+
+
+    ASSERT_TRUE(csi_usart_send(NULL, data, 13/*,bool asynch*/) != 0);
+    ASSERT_TRUE(csi_usart_receive(NULL, answer, 13/*,bool asynch*/) != 0);
+    ASSERT_TRUE(csi_usart_abort_send(NULL) != 0);
+    ASSERT_TRUE(csi_usart_abort_receive(NULL) != 0);
+    ASSERT_TRUE(csi_usart_uninitialize(NULL) != 0);
+
+#endif
+}
+
 
 
 int test_can(void)
@@ -73,10 +119,11 @@ int test_can(void)
     };
     dtest_suite_t *test_suite = dtest_add_suite(&test_suite_info);
     dtest_case_info_t test_case_info_array[] = {
+		{"test_can_rw_reg",      test_can_rw_reg,     CAN_TEST_REG_EN},
 #if (CONFIG_CAN_NUM >= 2)
-        { "can_test_fun",        can_test_fun,        CAN_TEST_FUN_EN },
+        { "test_can_fun",        test_can_fun,        CAN_TEST_FUN_EN },
 #endif
-        { "can_test_interfaces", can_test_interfaces, CAN_TEST_INTERFACE_EN },
+        { "test_can_interfaces", test_can_interfaces, CAN_TEST_INTERFACE_EN },
         { NULL, NULL }
     };
     dtest_add_cases(test_suite, test_case_info_array);

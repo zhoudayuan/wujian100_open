@@ -96,8 +96,8 @@ IRQn_Type;
 #define WJ_USI0_BASE              (0x50028000UL)
 #define WJ_USI1_BASE              (0x60028000UL)
 #define WJ_USI2_BASE              (0x50029000UL)
-#define WJ_GPIO0_BASE              (0x60018000UL)
-#define WJ_RTC0_BASE               (0x60004000UL)
+#define WJ_GPIO0_BASE             (0x60018000UL)
+#define WJ_RTC0_BASE              (0x60004000UL)
 #define WJ_TIMER0_BASE            (0x50000000UL)
 #define WJ_TIMER1_BASE            (0x50000014UL)
 #define WJ_TIMER2_BASE            (0x60000000UL)
@@ -108,12 +108,17 @@ IRQn_Type;
 #define WJ_TIMER7_BASE            (0x60000414UL)
 #define WJ_TIMER8_BASE            (0x50000800UL)
 #define WJ_TIMER9_BASE            (0x50000814UL)
-#define WJ_TIMER10_BASE            (0x60000800UL)
-#define WJ_TIMER11_BASE            (0x60000814UL)
-#define WJ_TIMER12_BASE            (0x50000c00UL)
-#define WJ_TIMER13_BASE            (0x50000c14UL)
-#define WJ_TIMER14_BASE            (0x60000c00UL)
-#define WJ_TIMER15_BASE            (0x60000c14UL)
+#define WJ_TIMER10_BASE           (0x60000800UL)
+#define WJ_TIMER11_BASE           (0x60000814UL)
+#define WJ_TIMER12_BASE           (0x50000c00UL)
+#define WJ_TIMER13_BASE           (0x50000c14UL)
+#define WJ_TIMER14_BASE           (0x60000c00UL)
+#define WJ_TIMER15_BASE           (0x60000c14UL)
+//---
+#define WJ_CAN_BASE               (0x60010000UL)
+
+
+
 
 typedef enum {
     WJENUM_DMA_UART0_RX,

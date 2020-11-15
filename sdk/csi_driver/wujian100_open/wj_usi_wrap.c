@@ -799,3 +799,16 @@ int32_t csi_spi_ss_control(spi_handle_t handle, spi_ss_stat_e stat)
 {
     return drv_usi_spi_ss_control(handle, stat);
 }
+
+
+/**
+  \brief       
+  \param[in]   
+  \param[in]   
+  \return      
+*/
+can_handle_t csi_can_initialize(int32_t idx, iic_event_cb_t cb_event)
+{
+    return drv_usi_can_initialize(idx, cb_event);
+}
+

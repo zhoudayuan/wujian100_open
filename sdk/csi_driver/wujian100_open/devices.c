@@ -410,3 +410,43 @@ int32_t target_get_rtc(int32_t idx, uint32_t *base, uint32_t *irq, void **handle
     return idx;
 }
 
+
+struct {
+    uint32_t base;
+    uint32_t irq;
+    void *handler;
+}
+const sg_pwm_config[CONFIG_PWM_NUM] = {
+    {WJ_PWM_BASE, PWM_IRQn, PWM_IRQHandler},
+};
+
+
+
+
+int32_t target_get_can_count(void)
+{
+    return CONFIG_PWM_NUM;
+}
+
+
+int32_t target_usi_can_init(uint32_t idx, uint32_t *base, uint32_t *irq, void **handler)
+{
+    if (idx >= target_get_can_count()) {
+        return -1;
+    }
+
+    if (base != NULL) {
+        *base = sg_pwm_config[idx].base;
+    }
+
+    if (irq != NULL) {
+        *irq = sg_pwm_config[idx].irq;
+    }
+
+    if (handler != NULL) {
+        *handler = sg_pwm_config[idx].handler;
+    }
+
+    return idx;
+}
+
