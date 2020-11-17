@@ -58,12 +58,14 @@ typedef enum IRQn {
     DMAC0_IRQn                      =   32,     /* dmac0 Interrupt */
     TIM8_IRQn                       =   33,     /* timer8 Interrupt */
     TIM9_IRQn                       =   34,     /* timer9 Interrupt */
-    TIM10_IRQn                       =  35,     /* timer10 Interrupt */
-    TIM11_IRQn                       =  36,     /* timer11 Interrupt */
-    TIM12_IRQn                       =  37,     /* timer12 Interrupt */
-    TIM13_IRQn                       =  38,     /* timer13 Interrupt */
-    TIM14_IRQn                       =  39,     /* timer14 Interrupt */
-    TIM15_IRQn                       =  40,     /* timer15 Interrupt */
+    TIM10_IRQn                      =  35,     /* timer10 Interrupt */
+    TIM11_IRQn                      =  36,     /* timer11 Interrupt */
+    TIM12_IRQn                      =  37,     /* timer12 Interrupt */
+    TIM13_IRQn                      =  38,     /* timer13 Interrupt */
+    TIM14_IRQn                      =  39,     /* timer14 Interrupt */
+    TIM15_IRQn                      =  40,     /* timer15 Interrupt */
+    //zhoudy_test_can
+    CAN_IRQn                        =  41,       /* CAN Interrupt */
 }
 IRQn_Type;
 
@@ -83,6 +85,9 @@ IRQn_Type;
 #define CONFIG_RTC_NUM 1
 #define CONFIG_USI_NUM 3
 #define CONFIG_PMU_NUM 1
+// zhoudy_test_can
+#define CONFIG_CAN_NUM 1
+
 
 /* ================================================================================ */
 /* ================              Peripheral memory map             ================ */
@@ -114,7 +119,7 @@ IRQn_Type;
 #define WJ_TIMER13_BASE           (0x50000c14UL)
 #define WJ_TIMER14_BASE           (0x60000c00UL)
 #define WJ_TIMER15_BASE           (0x60000c14UL)
-//---
+// zhoudy_test_can
 #define WJ_CAN_BASE               (0x60010000UL)
 
 

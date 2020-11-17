@@ -416,8 +416,8 @@ struct {
     uint32_t irq;
     void *handler;
 }
-const sg_pwm_config[CONFIG_PWM_NUM] = {
-    {WJ_PWM_BASE, PWM_IRQn, PWM_IRQHandler},
+const sg_can_config[CONFIG_PWM_NUM] = {
+    {WJ_CAN_BASE, CAN_IRQn, PWM_IRQHandler},
 };
 
 
@@ -425,7 +425,7 @@ const sg_pwm_config[CONFIG_PWM_NUM] = {
 
 int32_t target_get_can_count(void)
 {
-    return CONFIG_PWM_NUM;
+    return CONFIG_CAN_NUM;
 }
 
 

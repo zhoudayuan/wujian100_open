@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-#define CONFIG_CAN_NUM   2
+
 
 #define TEST_CAN    1
 #define TEST_TIMER  1

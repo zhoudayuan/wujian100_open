@@ -227,3 +227,11 @@ ATTRIBUTE_ISR void GPIO0_IRQHandler(void)
     wj_oip_gpio_irqhandler(0);
     CSI_INTRPT_EXIT();
 }
+
+ATTRIBUTE_ISR void CAN_IRQHandler(void)
+{
+    CSI_INTRPT_ENTER();
+    wj_CAN_irqhandler(0);
+    CSI_INTRPT_EXIT();
+}
+

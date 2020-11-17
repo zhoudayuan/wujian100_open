@@ -71,6 +71,13 @@
   */
 
 
+void wj_CAN_irqhandler(int idx)
+{
+  
+}
+
+
+
 /**
   \brief       
   \param[in]   
