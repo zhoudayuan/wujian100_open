@@ -807,8 +807,10 @@ int32_t csi_spi_ss_control(spi_handle_t handle, spi_ss_stat_e stat)
   \param[in]   
   \return      
 */
+
+#if 0
 can_handle_t csi_can_initialize(int32_t idx, iic_event_cb_t cb_event)
 {
     return drv_usi_can_initialize(idx, cb_event);
 }
-
+#endif

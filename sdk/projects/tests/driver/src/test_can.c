@@ -13,10 +13,10 @@
 
 void test_pin_can_init(void)
 {
-#if 0
+
     drv_pinmux_config(TEST_PIN_USART_TX, TEST_PIN_USART_TX_FUNC);
     drv_pinmux_config(TEST_PIN_USART_RX, TEST_PIN_USART_RX_FUNC);
-#endif
+
 }
 
 
@@ -53,9 +53,9 @@ static void test_can_fun(void)
 static void test_can_interfaces(void)
 {
 
+	test_pin_can_init();
 #if 0
     usart_handle_t pcsi_usart;
-
     uint8_t i;
     uint32_t ret;
     uint8_t answer[20];
@@ -69,14 +69,13 @@ static void test_can_interfaces(void)
         ASSERT_TRUE(ret == usart_cases[i].expect_out);
     }
 
-
     ASSERT_TRUE(csi_usart_send(NULL, data, 13/*,bool asynch*/) != 0);
     ASSERT_TRUE(csi_usart_receive(NULL, answer, 13/*,bool asynch*/) != 0);
     ASSERT_TRUE(csi_usart_abort_send(NULL) != 0);
     ASSERT_TRUE(csi_usart_abort_receive(NULL) != 0);
     ASSERT_TRUE(csi_usart_uninitialize(NULL) != 0);
-
 #endif
+
 }
 
 
@@ -119,7 +118,7 @@ int test_can(void)
     };
     dtest_suite_t *test_suite = dtest_add_suite(&test_suite_info);
     dtest_case_info_t test_case_info_array[] = {
-		{"test_can_rw_reg",      test_can_rw_reg,     CAN_TEST_REG_EN},
+//		{"test_can_rw_reg",      test_can_rw_reg,     CAN_TEST_REG_EN},
 #if (CONFIG_CAN_NUM >= 2)
         { "test_can_fun",        test_can_fun,        CAN_TEST_FUN_EN },
 #endif
