@@ -91,6 +91,9 @@
       <File Name="../../../../csi_driver/include/drv_wdt.h">
         <FileOption/>
       </File>
+      <File Name="../../../../csi_driver/include/drv_can.h">
+        <FileOption/>
+      </File>
     </VirtualDirectory>
     <VirtualDirectory Name="wujian100_open">
       <File Name="../../../../csi_driver/wujian100_open/wj_dmac_v2.c">
@@ -190,6 +193,7 @@
         <File Name="../../../../csi_driver/wujian100_open/include/usi_pin_planning.h">
           <FileOption/>
         </File>
+        <File Name="../../../../csi_driver/wujian100_open/include/wj_usi_can.h"/>
       </VirtualDirectory>
       <File Name="../../../../csi_driver/wujian100_open/isr.c">
         <FileOption/>
@@ -216,6 +220,9 @@
         <FileOption/>
       </File>
       <File Name="../../../../csi_driver/wujian100_open/vectors.S">
+        <FileOption/>
+      </File>
+      <File Name="../../../../csi_driver/wujian100_open/wj_usi_can.c">
         <FileOption/>
       </File>
     </VirtualDirectory>
@@ -351,6 +358,9 @@
             <FileOption/>
           </File>
           <File Name="../../../../projects/tests/driver/src/w25q64fv.c">
+            <FileOption/>
+          </File>
+          <File Name="../src/test_can.c">
             <FileOption/>
           </File>
         </VirtualDirectory>

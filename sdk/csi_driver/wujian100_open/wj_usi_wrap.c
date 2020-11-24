@@ -13,6 +13,7 @@
 #include <csi_config.h>
 #include <string.h>
 #include <drv_usi_usart.h>
+#include <drv_usi_can.h>
 #include <drv_usi_spi.h>
 #include <drv_usi_iic.h>
 #include <soc.h>
@@ -801,16 +802,9 @@ int32_t csi_spi_ss_control(spi_handle_t handle, spi_ss_stat_e stat)
 }
 
 
-/**
-  \brief       
-  \param[in]   
-  \param[in]   
-  \return      
-*/
-
-#if 0
-can_handle_t csi_can_initialize(int32_t idx, iic_event_cb_t cb_event)
+can_handle_t csi_can_initialize(int32_t idx, can_event_cb_t cb_event)
 {
-    return drv_usi_can_initialize(idx, cb_event);
+    drv_usi_can_initialize(idx, cb_event);
+    return NULL;
 }
-#endif
+

@@ -21,6 +21,7 @@
 extern void wj_usi_usart_irqhandler(int idx);
 extern void wj_usi_i2c_irqhandler(int idx);
 extern void wj_usi_spi_irqhandler(int idx);
+extern void wj_usi_can_irqhandler(int idx);
 extern int32_t target_usi_init(int32_t idx, uint32_t *base, uint32_t *irq);
 //------------------------------------------
 //            data private
@@ -69,6 +70,10 @@ void wj_usi_irqhandler(int32_t idx)
 
         case USI_MODE_SPI:
             wj_usi_spi_irqhandler(idx);
+            break;
+
+        case USI_MODE_CAN:
+            wj_usi_can_irqhandler(idx);
             break;
 
         default:

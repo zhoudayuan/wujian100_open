@@ -18,6 +18,7 @@
 #include <drv_irq.h>
 #include <drv_usi_usart.h>
 #include <wj_usi_usart.h>
+#include <drv_usi_can.h>
 #include <wj_usi.h>
 #include <soc.h>
 #include <pin_name.h>

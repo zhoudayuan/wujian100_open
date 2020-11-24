@@ -427,6 +427,9 @@ int32_t csi_usart_control_rx(usart_handle_t handle, uint32_t enable);
 */
 int32_t csi_usart_control_break(usart_handle_t handle, uint32_t enable);
 
+
+
+
 #ifdef __cplusplus
 }
 #endif

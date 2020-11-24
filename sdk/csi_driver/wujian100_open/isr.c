@@ -228,10 +228,11 @@ ATTRIBUTE_ISR void GPIO0_IRQHandler(void)
     CSI_INTRPT_EXIT();
 }
 
+#if 0
 ATTRIBUTE_ISR void CAN_IRQHandler(void)
 {
     CSI_INTRPT_ENTER();
     wj_CAN_irqhandler(0);
     CSI_INTRPT_EXIT();
 }
-
+#endif

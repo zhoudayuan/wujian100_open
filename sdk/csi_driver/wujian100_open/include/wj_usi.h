@@ -66,6 +66,7 @@ extern "C" {
 #define USI_MODE_UART    0x0
 #define USI_MODE_I2C     0x1
 #define USI_MODE_SPI     0x2
+#define USI_MODE_CAN     0x3	 
 
 #ifdef CONFIG_USI_V25
 #define USI_TX_MAX_FIFO        0x8
