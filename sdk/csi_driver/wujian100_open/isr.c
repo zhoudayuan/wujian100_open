@@ -207,6 +207,13 @@ ATTRIBUTE_ISR void USI2_IRQHandler(void)
     CSI_INTRPT_EXIT();
 }
 
+ATTRIBUTE_ISR void USI3_IRQHandler(void)
+{
+    CSI_INTRPT_ENTER();
+    wj_usi_irqhandler(3);
+    CSI_INTRPT_EXIT();
+}
+
 ATTRIBUTE_ISR void WDT_IRQHandler(void)
 {
     CSI_INTRPT_ENTER();

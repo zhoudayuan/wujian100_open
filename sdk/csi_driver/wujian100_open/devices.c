@@ -277,6 +277,7 @@ const sg_usi_config[CONFIG_USI_NUM] = {
     {WJ_USI0_BASE, USI0_IRQn, USI0_IRQHandler},
     {WJ_USI1_BASE, USI1_IRQn, USI1_IRQHandler},
     {WJ_USI2_BASE, USI2_IRQn, USI2_IRQHandler},
+    {WJ_USI3_BASE, CAN_IRQn,  USI3_IRQHandler}
 };
 
 int32_t target_usi_init(int32_t idx, uint32_t *base, uint32_t *irq)
@@ -421,15 +422,13 @@ const sg_can_config[CONFIG_PWM_NUM] = {
 };
 
 
-
-
 int32_t target_get_can_count(void)
 {
     return CONFIG_CAN_NUM;
 }
 
 
-int32_t target_usi_can_init(uint32_t idx, uint32_t *base, uint32_t *irq, void **handler)
+int32_ttarget_usi_can_init(uint32_t idx, uint32_t *base, uint32_t *irq, void **handler)
 {
     if (idx >= target_get_can_count()) {
         return -1;

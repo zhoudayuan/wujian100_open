@@ -94,6 +94,10 @@ IRQn_Type;
 /* ================================================================================ */
 /* --------------------------  CPU FPGA memory map  ------------------------------- */
 
+// zhoudy_test_can
+#define WJ_CAN_BASE               (0x60010000UL)
+
+
 #define WJ_PMU_BASE               (0x60030000UL)
 #define WJ_DMAC0_BASE             (0x40000000UL)
 #define WJ_WDT_BASE               (0x50008000UL)
@@ -101,6 +105,7 @@ IRQn_Type;
 #define WJ_USI0_BASE              (0x50028000UL)
 #define WJ_USI1_BASE              (0x60028000UL)
 #define WJ_USI2_BASE              (0x50029000UL)
+#define WJ_USI3_BASE              (WJ_CAN_BASE)
 #define WJ_GPIO0_BASE             (0x60018000UL)
 #define WJ_RTC0_BASE              (0x60004000UL)
 #define WJ_TIMER0_BASE            (0x50000000UL)
@@ -119,8 +124,6 @@ IRQn_Type;
 #define WJ_TIMER13_BASE           (0x50000c14UL)
 #define WJ_TIMER14_BASE           (0x60000c00UL)
 #define WJ_TIMER15_BASE           (0x60000c14UL)
-// zhoudy_test_can
-#define WJ_CAN_BASE               (0x60010000UL)
 
 
 

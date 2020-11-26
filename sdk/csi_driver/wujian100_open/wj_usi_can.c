@@ -7,6 +7,7 @@
 #include <drv_gpio.h>
 #include <soc.h>
 
+extern int32_t target_usi_can_init(int32_t idx, uint32_t *base, uint32_t *irq, void **handler);
 
 void wj_CAN_irqhandler(int idx)
 {
@@ -42,12 +43,11 @@ void wj_usi_can_irqhandler(int32_t idx)
 can_handle_t drv_usi_can_initialize(int32_t idx, can_event_cb_t cb_event)
 {
     //initialize instace
-#if 0
     uint32_t base;
     uint32_t irq;
     void *handler;
 
-    int32_t ret  = target_usi_usart_init(idx, &base, &irq, &handler);
+    int32_t ret  = target_usi_can_init(idx, &base, &irq, &handler);
 
     if (ret < 0 || ret >= CONFIG_USI_NUM) {
         return NULL;
@@ -59,13 +59,13 @@ can_handle_t drv_usi_can_initialize(int32_t idx, can_event_cb_t cb_event)
         return NULL;
     }
 
-    wj_usi_usart_priv_t *usart_priv = &usi_usart_instance[idx];
+    wj_usi_usart_priv_t *usart_priv = &usi_can_instance[idx];
 
-    usart_priv->base = base;
-    usart_priv->idx = idx;
-    usart_priv->irq = irq;
-    usart_priv->cb_event = cb_event;
-    wj_usi_reg_t *addr = (wj_usi_reg_t *)(usart_priv->base);
+    can_priv->base = base;
+    can_priv->idx = idx;
+    can_priv->irq = irq;
+    can_priv->cb_event = cb_event;
+    wj_usi_reg_t *addr = (wj_usi_reg_t *)(can_priv->base);
 
     addr->USI_EN = 0x0;
     addr->USI_INTR_UNMASK = WJ_UART_INT_ENABLE_DEFAUL;
@@ -78,5 +78,4 @@ can_handle_t drv_usi_can_initialize(int32_t idx, can_event_cb_t cb_event)
     drv_irq_enable(usart_priv->irq);
 
     return usart_priv;
-#endif
 }

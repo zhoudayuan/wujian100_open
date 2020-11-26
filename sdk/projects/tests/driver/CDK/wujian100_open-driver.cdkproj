@@ -193,7 +193,9 @@
         <File Name="../../../../csi_driver/wujian100_open/include/usi_pin_planning.h">
           <FileOption/>
         </File>
-        <File Name="../../../../csi_driver/wujian100_open/include/wj_usi_can.h"/>
+        <File Name="../../../../csi_driver/wujian100_open/include/wj_usi_can.h">
+          <FileOption/>
+        </File>
       </VirtualDirectory>
       <File Name="../../../../csi_driver/wujian100_open/isr.c">
         <FileOption/>
