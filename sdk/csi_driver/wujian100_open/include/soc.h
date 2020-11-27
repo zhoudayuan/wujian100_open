@@ -65,7 +65,7 @@ typedef enum IRQn {
     TIM14_IRQn                      =  39,     /* timer14 Interrupt */
     TIM15_IRQn                      =  40,     /* timer15 Interrupt */
     //zhoudy_test_can
-    CAN_IRQn                        =  41,       /* CAN Interrupt */
+    CAN_IRQn                       =  41,     /* usi3:CAN Interrupt */
 }
 IRQn_Type;
 
@@ -105,7 +105,7 @@ IRQn_Type;
 #define WJ_USI0_BASE              (0x50028000UL)
 #define WJ_USI1_BASE              (0x60028000UL)
 #define WJ_USI2_BASE              (0x50029000UL)
-#define WJ_USI3_BASE              (WJ_CAN_BASE)
+//#define WJ_USI3_BASE              (WJ_CAN_BASE)
 #define WJ_GPIO0_BASE             (0x60018000UL)
 #define WJ_RTC0_BASE              (0x60004000UL)
 #define WJ_TIMER0_BASE            (0x50000000UL)

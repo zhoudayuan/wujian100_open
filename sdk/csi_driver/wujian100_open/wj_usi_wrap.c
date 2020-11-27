@@ -802,9 +802,3 @@ int32_t csi_spi_ss_control(spi_handle_t handle, spi_ss_stat_e stat)
 }
 
 
-can_handle_t csi_can_initialize(int32_t idx, can_event_cb_t cb_event)
-{
-    drv_usi_can_initialize(idx, cb_event);
-    return NULL;
-}
-

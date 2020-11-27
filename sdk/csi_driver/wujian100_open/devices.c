@@ -43,6 +43,7 @@ extern void USI1_IRQHandler(void);
 extern void USI2_IRQHandler(void);
 extern void WDT_IRQHandler(void);
 extern void DMAC0_IRQHandler(void);
+extern void CAN_IRQHandler(void);
 
 #define readl(addr) \
     ({ unsigned int __v = (*(volatile unsigned int *) (addr)); __v; })
@@ -277,7 +278,6 @@ const sg_usi_config[CONFIG_USI_NUM] = {
     {WJ_USI0_BASE, USI0_IRQn, USI0_IRQHandler},
     {WJ_USI1_BASE, USI1_IRQn, USI1_IRQHandler},
     {WJ_USI2_BASE, USI2_IRQn, USI2_IRQHandler},
-    {WJ_USI3_BASE, CAN_IRQn,  USI3_IRQHandler}
 };
 
 int32_t target_usi_init(int32_t idx, uint32_t *base, uint32_t *irq)
@@ -417,35 +417,27 @@ struct {
     uint32_t irq;
     void *handler;
 }
-const sg_can_config[CONFIG_PWM_NUM] = {
-    {WJ_CAN_BASE, CAN_IRQn, PWM_IRQHandler},
+const sg_can_config[CONFIG_CAN_NUM] = {
+    {WJ_CAN_BASE, CAN_IRQn, USI3_IRQHandler},
 };
 
-
-int32_t target_get_can_count(void)
+int32_t target_usi_can_init(uint32_t idx, uint32_t *base, uint32_t *irq, void **handler)
 {
-    return CONFIG_CAN_NUM;
-}
-
-
-int32_ttarget_usi_can_init(uint32_t idx, uint32_t *base, uint32_t *irq, void **handler)
-{
-    if (idx >= target_get_can_count()) {
+    if (idx >= CONFIG_CAN_NUM) {
         return -1;
     }
 
     if (base != NULL) {
-        *base = sg_pwm_config[idx].base;
+        *base = sg_can_config[idx].base;
     }
 
     if (irq != NULL) {
-        *irq = sg_pwm_config[idx].irq;
+        *irq = sg_can_config[idx].irq;
     }
 
     if (handler != NULL) {
-        *handler = sg_pwm_config[idx].handler;
+        *handler = sg_can_config[idx].handler;
     }
 
     return idx;
 }
-

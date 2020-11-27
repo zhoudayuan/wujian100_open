@@ -47,14 +47,11 @@ static void test_can_fun(void)
 }
 #endif
 
-
-
 static void test_can_interfaces(void)
 {
-    //int32_t idx;
     can_handle_t pcsi_usart;
 	test_pin_can_init();
-    pcsi_usart = csi_can_initialize(1, NULL);
+    pcsi_usart = csi_can_initialize(0 , NULL);
     ASSERT_TRUE(pcsi_usart != NULL);
 }
 

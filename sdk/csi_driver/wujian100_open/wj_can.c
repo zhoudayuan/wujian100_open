@@ -9,6 +9,27 @@
 
 extern int32_t target_usi_can_init(int32_t idx, uint32_t *base, uint32_t *irq, void **handler);
 
+typedef struct {
+    uint32_t base;
+    uint32_t irq;
+    usart_event_cb_t cb_event;           ///< Event callback
+    uint32_t rx_total_num;
+    uint32_t tx_total_num;
+    uint8_t *rx_buf;
+    uint8_t *tx_buf;
+    volatile uint32_t rx_cnt;
+    volatile uint32_t tx_cnt;
+    volatile uint32_t tx_busy;
+    volatile uint32_t rx_busy;
+    //for get data count
+    uint32_t last_tx_num;
+    uint32_t last_rx_num;
+    int32_t idx;
+} wj_usi_can_priv_t;
+
+static wj_usi_can_priv_t can_instance[CONFIG_USI_NUM];
+
+
 void wj_CAN_irqhandler(int idx)
 {
 
@@ -39,8 +60,13 @@ void wj_usi_can_irqhandler(int32_t idx)
 #endif
 }
 
+can_handle_t csi_can_initialize(int32_t idx, can_event_cb_t cb_event)
+{
+    drv_can_initialize(idx, cb_event);
+    return NULL;
+}
 
-can_handle_t drv_usi_can_initialize(int32_t idx, can_event_cb_t cb_event)
+can_handle_t drv_can_initialize(int32_t idx, can_event_cb_t cb_event)
 {
     //initialize instace
     uint32_t base;
@@ -52,24 +78,22 @@ can_handle_t drv_usi_can_initialize(int32_t idx, can_event_cb_t cb_event)
     if (ret < 0 || ret >= CONFIG_USI_NUM) {
         return NULL;
     }
-
     ret = drv_usi_initialize(idx);
 
     if (ret < 0) {
         return NULL;
     }
 
-    wj_usi_usart_priv_t *usart_priv = &usi_can_instance[idx];
-
+    wj_usi_can_priv_t *can_priv = &can_instance[idx];
     can_priv->base = base;
-    can_priv->idx = idx;
-    can_priv->irq = irq;
+    can_priv->idx  = idx;
+    can_priv->irq  = irq;
     can_priv->cb_event = cb_event;
     wj_usi_reg_t *addr = (wj_usi_reg_t *)(can_priv->base);
 
     addr->USI_EN = 0x0;
     addr->USI_INTR_UNMASK = WJ_UART_INT_ENABLE_DEFAUL;
-    addr->USI_INTR_EN = WJ_UART_INT_ENABLE_DEFAUL;
+    addr->USI_INTR_EN     = WJ_UART_INT_ENABLE_DEFAUL;
 
     wj_usi_set_rxfifo_th(addr, USI_RX_MAX_FIFO);
 

@@ -25,7 +25,7 @@ typedef enum {
 } can_event_e;
 
 typedef void (*can_event_cb_t)(int32_t idx, can_event_e event);   ///< Pointer to \ref usart_event_cb_t : USART Event call back.
-can_handle_t drv_usi_can_initialize(int32_t idx, can_event_cb_t cb_event);
+can_handle_t csi_can_initialize(int32_t idx, can_event_cb_t cb_event);
 
 #ifdef __cplusplus
 }
