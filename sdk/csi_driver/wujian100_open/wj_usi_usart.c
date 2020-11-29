@@ -18,7 +18,7 @@
 #include <drv_irq.h>
 #include <drv_usi_usart.h>
 #include <wj_usi_usart.h>
-#include <drv_usi_can.h>
+#include <drv_can.h>
 #include <wj_usi.h>
 #include <soc.h>
 #include <pin_name.h>
@@ -509,7 +509,7 @@ int32_t drv_usi_usart_uninitialize(usart_handle_t handle)
 
 /**
   \brief       config usart mode.
-  \param[in]   handle  usart handle to operate.
+  \param[in]   handle usart handle to operate.
   \param[in]   mode      \ref usart_mode_e
   \param[in]   parity    \ref usart_parity_e
   \param[in]   stopbits  \ref usart_stop_bits_e

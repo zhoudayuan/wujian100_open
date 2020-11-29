@@ -10,6 +10,7 @@
 #include "pin.h"
 #include "test_driver_config.h"
 #include <csi_config.h>
+#include "wj_can.h"
 
 
 
@@ -47,12 +48,15 @@ static void test_can_fun(void)
 }
 #endif
 
+
 static void test_can_interfaces(void)
 {
-    can_handle_t pcsi_usart;
+    can_handle_t pcsi_can;
 	test_pin_can_init();
-    pcsi_usart = csi_can_initialize(0 , NULL);
-    ASSERT_TRUE(pcsi_usart != NULL);
+    pcsi_can = csi_can_initialize(0 , NULL);
+    ASSERT_TRUE(pcsi_can != NULL);
+    csi_can_send(pcsi_can, CAN_MODE_OPERATION);
+    //csi_can_config(pcsi_can, CAN_MODE_OPERATION);
 }
 
 

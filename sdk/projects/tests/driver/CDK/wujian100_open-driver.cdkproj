@@ -193,9 +193,7 @@
         <File Name="../../../../csi_driver/wujian100_open/include/usi_pin_planning.h">
           <FileOption/>
         </File>
-        <File Name="../../../../csi_driver/wujian100_open/include/wj_usi_can.h">
-          <FileOption/>
-        </File>
+        <File Name="../../../../csi_driver/wujian100_open/include/wj_can.h"/>
       </VirtualDirectory>
       <File Name="../../../../csi_driver/wujian100_open/isr.c">
         <FileOption/>
@@ -224,7 +222,7 @@
       <File Name="../../../../csi_driver/wujian100_open/vectors.S">
         <FileOption/>
       </File>
-      <File Name="../../../../csi_driver/wujian100_open/wj_usi_can.c">
+      <File Name="../../../../csi_driver/wujian100_open/wj_can.c">
         <FileOption/>
       </File>
     </VirtualDirectory>

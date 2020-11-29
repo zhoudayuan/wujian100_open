@@ -13,7 +13,7 @@
 #include <csi_config.h>
 #include <string.h>
 #include <drv_usi_usart.h>
-#include <drv_usi_can.h>
+#include <drv_can.h>
 #include <drv_usi_spi.h>
 #include <drv_usi_iic.h>
 #include <soc.h>

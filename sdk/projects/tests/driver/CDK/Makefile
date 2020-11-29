@@ -5,7 +5,7 @@ All:
 	@
 	@make -f "wujian100_open-driver.mk" MakeIntermediateDirs && make -f "wujian100_open-driver.mk" -j 4
 	@echo Executing Post Build commands ...
-	@export CDKPath="D:/C-Sky/CDK" ProjectPath="D:/test/prj-wujian-can/wujian100_open/sdk/projects/tests/driver/CDK" && "D:/test/prj-wujian-can/wujian100_open/sdk/projects/tests/driver/CDK//../../../../utilities//aft_build.sh"
+	@export CDKPath="D:/C-Sky/CDK" ProjectPath="D:/wujian/test/prj-wujian-can/code/wujian100_open/sdk/projects/tests/driver/CDK" && "D:/wujian/test/prj-wujian-can/code/wujian100_open/sdk/projects/tests/driver/CDK//../../../../utilities//aft_build.sh"
 	@echo Done
 
 clean:

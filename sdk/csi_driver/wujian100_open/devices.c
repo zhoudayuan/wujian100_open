@@ -417,11 +417,12 @@ struct {
     uint32_t irq;
     void *handler;
 }
-const sg_can_config[CONFIG_CAN_NUM] = {
-    {WJ_CAN_BASE, CAN_IRQn, USI3_IRQHandler},
+const
+sg_can_config[CONFIG_CAN_NUM] = {
+    {WJ_CAN_BASE, CAN_IRQn, CAN_IRQHandler},
 };
 
-int32_t target_usi_can_init(uint32_t idx, uint32_t *base, uint32_t *irq, void **handler)
+int32_t target_can_init(uint32_t idx, uint32_t *base, uint32_t *irq, void **handler)
 {
     if (idx >= CONFIG_CAN_NUM) {
         return -1;

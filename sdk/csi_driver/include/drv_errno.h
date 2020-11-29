@@ -86,6 +86,7 @@ typedef enum {
 #define CSI_DRV_ERRNO_ETHPHY_BASE           0x81240000
 #define CSI_DRV_ERRNO_QW_EFUSE_BASE         0x81250000
 #define CSI_DRV_ERRNO_RESET_BASE            0x81260000
+#define CSI_DRV_ERRNO_CAN_BASE              0x81270000
 
 #ifdef __cplusplus
 }
