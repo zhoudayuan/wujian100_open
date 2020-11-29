@@ -9,6 +9,15 @@ extern "C" {
 
 #define  WJ_CAN_MODE_OPERATION      (0x1UL<<0)
 
+
+
+// CANSR
+#define  CAN_SR_TRANSMIT_BUFFER_RELEASED   (0x1UL<<2)
+#define  CAN_SR_TRANSMIT_BUFFER_LOCKED     (0x1UL<<2)
+
+
+
+
 typedef struct {
     __IOM uint32_t   CANMOD;                    // Offset 0x00 controller MODe setting register
     __IOM uint32_t   CANCMR;                    // Offset 0x04 CAN controller ComMand Register.

@@ -157,7 +157,7 @@ int32_t wj_can_set_mode(can_handle_t handle, can_mode_e mode)
             addr->CANMOD |=  WJ_CAN_MODE_OPERATION;
             break;
         default:
-            return ERR_IIC(DRV_ERROR_PARAMETER);
+            return ERR_CAN(DRV_ERROR_PARAMETER);
     }
 
     can_priv->mode = mode;
@@ -166,18 +166,26 @@ int32_t wj_can_set_mode(can_handle_t handle, can_mode_e mode)
 
 int32_t drv_spi_send(spi_handle_t handle, const void *data, uint32_t num)
 {
+	uint32_t b_flag = 0;
     if (handle == NULL || data == NULL || num == 0) {
-        return ERR_SPI(DRV_ERROR_PARAMETER);
+        return ERR_CAN(DRV_ERROR_PARAMETER);
     }
 
     wj_can_priv_t *can_priv = handle;
-
     wj_can_set_mode(can_priv, CAN_MODE_OPERATION);
+    wj_can_reg_t *addr = (wj_can_reg_t *)(can_priv->base);
 
+	int timeout = 1000000;
+	while (((addr->CANSR & CAN_SR_TRANSMIT_BUFFER_LOCKED) == 0) && (timeout--)); 	// wait transmit buffer free
+	if (timeout < 0)
+	{
+		return ERR_CAN(DRV_ERROR_BUSY);
+	}
 
-
-
-
-    can_priv
 
 }
+
+
+
+
+
