@@ -13,7 +13,11 @@ typedef struct {
     uint32_t base;
     uint32_t irq;
     int32_t  ssel;
-    spi_event_cb_t cb_event;
+    int32_t  idx;
+    can_event_cb_t cb_event;
+    uint32_t mode;
+#if 0
+
     uint32_t send_num;
     uint32_t recv_num;
     uint8_t *send_buf;
@@ -22,11 +26,11 @@ typedef struct {
     uint32_t transfer_num;
     uint32_t clk_num;            //clock number with a process of communication
     uint8_t  state;               //Current SPI state
-    uint32_t mode;               //Current SPI mode
+
     uint8_t  ss_mode;
     spi_status_t status;
     int32_t block_mode;
-    int32_t idx;
+
 #ifdef CONFIG_SPI_DMA
     int32_t dma_tx_id;
     int32_t dma_rx_id;
@@ -37,6 +41,7 @@ typedef struct {
 #define TRANSFER_STAT_TRAN      3
     uint8_t  transfer_stat;     //TRANSFER_STAT_* : 0 - idle, 1 - send , 2 -receive , 3 - transceive
     uint32_t tot_num;
+#endif
 } wj_can_priv_t;
 
 static wj_can_priv_t can_instance[CONFIG_USI_NUM];
@@ -102,42 +107,140 @@ can_handle_t drv_can_initialize(int32_t idx, can_event_cb_t cb_event)
 
 int32_t csi_can_config(can_handle_t handle, can_mode_e mode)
 {
-	drv_can_config_mode(handle, mode);
+	return drv_can_config_mode(handle, mode);
 }
 
 
-int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode)
+
+#if 0
+int32_t drv_can_config_mode_0(can_handle_t handle, can_mode_e mode)
 {
     CAN_NULL_PARAM_CHK(handle);
-
     if ((int32_t)mode < 0) {
         return 0;
     }
-
     wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
-
     switch (mode) {
         case CAN_MODE_OPERATION:
             addr->CANMOD &= ~WJ_CAN_MODE_OPERATION;
             break;
-
         case CAN_MODE_RESET:
             addr->CANMOD |=  WJ_CAN_MODE_OPERATION;
             break;
         default:
-            return ERR_IIC(DRV_ERROR_PARAMETER);
+            return ERR_CAN(DRV_ERROR_PARAMETER);
     }
+    return 0;
+}
+#endif
 
+
+int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode, )
+{
+    CAN_NULL_PARAM_CHK(handle);
+    if ((int32_t)mode < 0) {
+        return 0;
+    }
+    wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
+    switch (mode) {
+        case CAN_MODE_OPERATION:
+            addr->CANMOD &= ~CAN_BIT_RESET_MODE;
+            break;
+        case CAN_MODE_RESET:
+            addr->CANMOD |=  CAN_BIT_RESET_MODE;
+            break;
+        case CAN_MODE_ACCEPTANCE_SINGLE_FILTER:
+            addr->CANMOD |=  CAN_BIT_ACCEPTANCE_FILTER_MODE;
+            break;
+        case CAN_MODE_ACCEPTANCE_DUAL_FILTER:
+            addr->CANMOD &=  CAN_BIT_ACCEPTANCE_FILTER_MODE;
+            break;
+
+
+        default:
+            return ERR_CAN(DRV_ERROR_PARAMETER);
+    }
     return 0;
 }
 
 
-void csi_can_send(pcsi_can, const void *data, uint32_t num)
+
+/*
+    setp-1:Set CLKOUT frequency, derived from XTAL1 input
+*/
+int32_t drv_can_config_clock(can_handle_t handle, uint32_t fclk_osc_enable, uint32_t fclk_osc)
 {
-    drv_can_config_mode(pcsi_can, CAN_MODE_OPERATION);
-    return drv_spi_send(pcsi_can, data, num);
+    CAN_NULL_PARAM_CHK(handle);
+    wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
+    addr->CANCDR  = ((addr->CANCDR & ~0x07)   | (fclk_osc & 0x07));
+    addr->CANCDR  = ((addr->CANCDR & ~(1<<3)) | (fclk_osc_enable & 1<<3));
+    return 0;
 }
 
+
+/*
+    setp-2:Configure the output driver for outputs TX0 and TX1
+*/ 
+int32_t drv_can_config_OCR(can_handle_t handle, uint32_t output_cfg)
+{
+    CAN_NULL_PARAM_CHK(handle);
+    wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
+    addr->CANOCR = ((addr->CANOCR & ~0X3) | (output_cfg & 0X3));
+    return 0;
+}
+
+
+/*
+    setp-3:Enable required interrupts
+*/ 
+int32_t drv_can_config_IER_enable(can_handle_t handle, uint32_t interrupt_enable)
+{
+    CAN_NULL_PARAM_CHK(handle);
+    wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
+    addr->CANIER |=  1 << interrupt_enable;
+    return 0;
+}
+
+/*
+    setp-4:Enable required interrupts
+*/ 
+int32_t drv_can_config_IER_disable(can_handle_t handle, uint32_t interrupt_disable)
+{
+    CAN_NULL_PARAM_CHK(handle);
+    wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
+    addr->CANIER &=  ~(1 << interrupt_disable);
+    return 0;
+}
+
+/*
+    setp-5-6:Set to select required range of identifiers
+*/ 
+int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, uint32_t acr, uint32_t amr)
+{
+    CAN_NULL_PARAM_CHK(handle);
+    wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
+    addr->CANACR0 = acr & 0xff;
+    addr->CANACR1 = (acr >> 8)  & 0xff;
+    addr->CANACR2 = (acr >> 16) & 0xff;
+    addr->CANACR3 = (acr >> 24) & 0xff;
+    addr->CANACR0 = acr & 0xff;
+    addr->CANACR1 = (acr >> 8)  & 0xff;
+    addr->CANACR2 = (acr >> 16) & 0xff;
+    addr->CANACR3 = (acr >> 24) & 0xff;
+
+    
+
+}
+
+
+void csi_can_send(can_handle_t pcsi_can, const void *data, uint32_t num)
+{
+    drv_can_config_mode(pcsi_can, CAN_MODE_OPERATION);
+    drv_can_send(pcsi_can, data, num);
+}
+
+
+#if  0
 int32_t wj_can_set_mode(can_handle_t handle, can_mode_e mode)
 {
     CAN_NULL_PARAM_CHK(handle);
@@ -159,20 +262,20 @@ int32_t wj_can_set_mode(can_handle_t handle, can_mode_e mode)
         default:
             return ERR_CAN(DRV_ERROR_PARAMETER);
     }
-
     can_priv->mode = mode;
     return 0;
 }
+#endif
 
-int32_t drv_spi_send(spi_handle_t handle, const void *data, uint32_t num)
+
+int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num)
 {
-	uint32_t b_flag = 0;
     if (handle == NULL || data == NULL || num == 0) {
         return ERR_CAN(DRV_ERROR_PARAMETER);
     }
 
     wj_can_priv_t *can_priv = handle;
-    wj_can_set_mode(can_priv, CAN_MODE_OPERATION);
+    //wj_can_set_mode(can_priv, CAN_MODE_OPERATION);
     wj_can_reg_t *addr = (wj_can_reg_t *)(can_priv->base);
 
 	int timeout = 1000000;
@@ -181,8 +284,7 @@ int32_t drv_spi_send(spi_handle_t handle, const void *data, uint32_t num)
 	{
 		return ERR_CAN(DRV_ERROR_BUSY);
 	}
-
-
+	return 0;
 }
 
 

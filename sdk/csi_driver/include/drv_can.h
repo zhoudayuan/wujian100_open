@@ -13,10 +13,8 @@ extern "C" {
 #define CAN_NULL_PARAM_CHK(para) HANDLE_PARAM_CHK(para, ERR_CAN(DRV_ERROR_PARAMETER))
 
 
-typedef enum {
-    CAN_MODE_OPERATION  = 0, ///< ECB MODE
-    CAN_MODE_RESET,          ///< CBC MODE
-} can_mode_e;
+#define  ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
+
 
 typedef void *can_handle_t;
 
@@ -26,7 +24,8 @@ typedef enum {
 
 typedef void (*can_event_cb_t)(int32_t idx, can_event_e event);   ///< Pointer to \ref can_event_cb_t : USART Event call back.
 can_handle_t drv_can_initialize(int32_t idx, can_event_cb_t cb_event);
-
+int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode);
+int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num);
 #ifdef __cplusplus
 }
 #endif

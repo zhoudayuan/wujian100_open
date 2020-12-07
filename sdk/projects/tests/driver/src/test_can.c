@@ -51,11 +51,33 @@ static void test_can_fun(void)
 
 static void test_can_interfaces(void)
 {
+	uint8_t data[] = {1,2,3,4};
     can_handle_t pcsi_can;
 	test_pin_can_init();
     pcsi_can = csi_can_initialize(0 , NULL);
-    ASSERT_TRUE(pcsi_can != NULL);
-    csi_can_send(pcsi_can, CAN_MODE_OPERATION);
+    drv_can_config_mode(pcsi_can,  CAN_MODE_RESET);
+    drv_can_config_clock(pcsi_can, CAN_FCLK_OSC_DIVIDED_4);
+    drv_can_config_OCR(pcsi_can, CAN_NORMAL_OUTPUT_MODE);
+    drv_can_config_IER_disable(pcsi_can, CAN_BUS_ERROR_INTERRUPT);
+    drv_can_config_IER_disable(pcsi_can, CAN_ARBITRATION_LOST_INTERRUPT);
+    drv_can_config_IER_disable(pcsi_can, CAN_ERROR_PASSIVE_INTERRUPT);
+    drv_can_config_IER_disable(pcsi_can, CAN_WAKE_UP_INTERRUPT);
+    drv_can_config_IER_disable(pcsi_can, CAN_DATA_OVERRUN_INTERRUPT);
+    drv_can_config_IER_disable(pcsi_can, CAN_ERROR_WARNING_INTERRUPT);
+    drv_can_config_IER_disable(pcsi_can, CAN_TRANSMIT_INTERRUPT);
+    drv_can_config_IER_disable(pcsi_can, CAN_RECEIVE_INTERRUPT);
+    drv_can_config_mode(pcsi_can, CAN_MODE_ACCEPTANCE_SINGLE_FILTER);
+    drv_can_config_acceptance_filters(pcsi_can, CAN_MODE_ACCEPTANCE_SINGLE_FILTER);
+
+
+
+    
+	// 配置时序
+	// 接受过滤器将应用于收到的邮件
+	// 传输位流的副本或TX1上的传输时钟
+	// 中断配置
+	ASSERT_TRUE(pcsi_can != NULL);
+    csi_can_send(pcsi_can, data, ARRAY_SIZE(data));
     //csi_can_config(pcsi_can, CAN_MODE_OPERATION);
 }
 
@@ -75,4 +97,6 @@ int test_can(void)
     dtest_add_cases(test_suite, test_case_info_array);
     return 0;
 }
+
+
 

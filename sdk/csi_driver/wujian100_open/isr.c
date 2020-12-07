@@ -26,6 +26,7 @@ extern void wj_rtc_irqhandler(int32_t idx);
 extern void wj_usi_irqhandler(int32_t idx);
 extern void wj_oip_wdt_irqhandler(int32_t idx);
 extern void wj_dma_irqhandler(int32_t idx);
+extern void wj_CAN_irqhandler(int32_t idx);
 
 #define  ATTRIBUTE_ISR
 
