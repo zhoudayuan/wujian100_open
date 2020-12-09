@@ -87,19 +87,15 @@ can_handle_t drv_can_initialize(int32_t idx, can_event_cb_t cb_event)
     uint32_t base;
     uint32_t irq;
     void    *handler;
-
     int32_t ret  = target_can_init(idx, &base, &irq, &handler);
-
     if (ret < 0 || ret >= CONFIG_USI_NUM) {
         return NULL;
     }
-
     wj_can_priv_t *can_priv = &can_instance[idx];
     can_priv->base = base;
     can_priv->idx  = idx;
     can_priv->irq  = irq;
     can_priv->cb_event = cb_event;
-
     drv_irq_register(can_priv->irq, handler);
     drv_irq_enable(can_priv->irq);
     return can_priv;
@@ -135,7 +131,7 @@ int32_t drv_can_config_mode_0(can_handle_t handle, can_mode_e mode)
 #endif
 
 
-int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode, )
+int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode)
 {
     CAN_NULL_PARAM_CHK(handle);
     if ((int32_t)mode < 0) {
@@ -155,8 +151,6 @@ int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode, )
         case CAN_MODE_ACCEPTANCE_DUAL_FILTER:
             addr->CANMOD &=  CAN_BIT_ACCEPTANCE_FILTER_MODE;
             break;
-
-
         default:
             return ERR_CAN(DRV_ERROR_PARAMETER);
     }
@@ -168,12 +162,12 @@ int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode, )
 /*
     setp-1:Set CLKOUT frequency, derived from XTAL1 input
 */
-int32_t drv_can_config_clock(can_handle_t handle, uint32_t fclk_osc_enable, uint32_t fclk_osc)
+int32_t drv_can_config_clock(can_handle_t handle, uint32_t clkout_enable, uint32_t fclk_osc)
 {
     CAN_NULL_PARAM_CHK(handle);
     wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
     addr->CANCDR  = ((addr->CANCDR & ~0x07)   | (fclk_osc & 0x07));
-    addr->CANCDR  = ((addr->CANCDR & ~(1<<3)) | (fclk_osc_enable & 1<<3));
+    addr->CANCDR  = ((addr->CANCDR & ~(1<<3)) | (clkout_enable & 1<<3));
     return 0;
 }
 

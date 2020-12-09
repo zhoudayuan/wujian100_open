@@ -49,6 +49,20 @@ static void test_can_fun(void)
 #endif
 
 
+
+static void test_can_fun(void)
+{
+    can_handle_t pcsi_can;
+    pcsi_can = csi_can_initialize(0 , NULL);
+    drv_can_config_mode(pcsi_can,  CAN_MODE_RESET);
+
+    
+//    ASSERT_TRUE(pin != NULL);
+
+}
+
+
+
 static void test_can_interfaces(void)
 {
 	uint8_t data[] = {1,2,3,4};
@@ -56,7 +70,7 @@ static void test_can_interfaces(void)
 	test_pin_can_init();
     pcsi_can = csi_can_initialize(0 , NULL);
     drv_can_config_mode(pcsi_can,  CAN_MODE_RESET);
-    drv_can_config_clock(pcsi_can, CAN_FCLK_OSC_DIVIDED_4);
+    drv_can_config_clock(pcsi_can, CAN_CLKOUT_ENABLE, CAN_FCLK_OSC_DIVIDED_4);
     drv_can_config_OCR(pcsi_can, CAN_NORMAL_OUTPUT_MODE);
     drv_can_config_IER_disable(pcsi_can, CAN_BUS_ERROR_INTERRUPT);
     drv_can_config_IER_disable(pcsi_can, CAN_ARBITRATION_LOST_INTERRUPT);
@@ -71,7 +85,6 @@ static void test_can_interfaces(void)
 
 
 
-    
 	// 配置时序
 	// 接受过滤器将应用于收到的邮件
 	// 传输位流的副本或TX1上的传输时钟
@@ -90,7 +103,7 @@ int test_can(void)
     dtest_suite_t *test_suite = dtest_add_suite(&test_suite_info);
     dtest_case_info_t test_case_info_array[] = {
 //		{"test_can_rw_reg",      test_can_rw_reg,     CAN_TEST_REG_EN},
-//        { "test_can_fun",        test_can_fun,        CAN_TEST_FUN_EN },
+        { "test_can_fun",        test_can_fun,        CAN_TEST_FUN_EN },
         { "test_can_interfaces", test_can_interfaces, CAN_TEST_INTERFACE_EN },
         { NULL, NULL }
     };

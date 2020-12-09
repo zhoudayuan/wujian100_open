@@ -1,12 +1,21 @@
 #ifndef _CSI_CAN_H_
 #define _CSI_CAN_H_
 
-
 #include <drv_common.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+//AM:CANMOD     PG:MODE REGISTER (MOD): ADDRESS 00h
+//#define  WJ_CAN_MODE_OPERATION      (0x1UL<<0)
+typedef enum {
+    CAN_MODE_OPERATION  = 0,
+    CAN_MODE_RESET,
+    CAN_MODE_ACCEPTANCE_SINGLE_FILTER,
+    CAN_MODE_ACCEPTANCE_DUAL_FILTER
+} can_mode_e;
 
 
 #define ERR_CAN(errno) (CSI_DRV_ERRNO_CAN_BASE | errno)

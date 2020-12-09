@@ -8,14 +8,7 @@ extern "C" {
 #endif
 
 
-//AM:CANMOD     PG:MODE REGISTER (MOD): ADDRESS 00h
-//#define  WJ_CAN_MODE_OPERATION      (0x1UL<<0)
-typedef enum {
-    CAN_MODE_OPERATION  = 0,
-    CAN_MODE_RESET,
-    CAN_MODE_ACCEPTANCE_SINGLE_FILTER,
-    CAN_MODE_ACCEPTANCE_DUAL_FILTER
-} can_mode_e;
+
 
 
 #define CAN_BIT_SLEEP_MODE                (1UL<<4)
@@ -30,16 +23,18 @@ typedef enum {
 #define  CAN_SR_TRANSMIT_BUFFER_RELEASED        (0x1UL<<2)
 #define  CAN_SR_TRANSMIT_BUFFER_LOCKED          (0x1UL<<2)
 
-//AM:CANCDR PG:CDR
-#define  CAN_CLKOUT_ENABLE                      (1UL<<3)
-#define  CAN_FCLK_OSC_DIVIDED_2                 0x0
-#define  CAN_FCLK_OSC_DIVIDED_4                 0x1
-#define  CAN_FCLK_OSC_DIVIDED_6                 0x2
-#define  CAN_FCLK_OSC_DIVIDED_8                 0x3
-#define  CAN_FCLK_OSC_DIVIDED_10                0x4
-#define  CAN_FCLK_OSC_DIVIDED_12                0x5
-#define  CAN_FCLK_OSC_DIVIDED_14                0x6
-#define  CAN_FCLK_OSC_DIVIDED_0                 0x7
+
+//CLOCK DIVIDER REGISTER (CDR):  ADDRESS 1Fh
+#define  CAN_CLKOUT_DISABLE        (1UL<<3)  // Setting this bit allows the external CLKOUT signal to be disabled. 
+#define  CAN_CLKOUT_ENABLE         (0UL<<3)
+#define  CAN_FCLK_OSC_DIVIDED_2    0x0
+#define  CAN_FCLK_OSC_DIVIDED_4    0x1
+#define  CAN_FCLK_OSC_DIVIDED_6    0x2
+#define  CAN_FCLK_OSC_DIVIDED_8    0x3
+#define  CAN_FCLK_OSC_DIVIDED_10   0x4
+#define  CAN_FCLK_OSC_DIVIDED_12   0x5
+#define  CAN_FCLK_OSC_DIVIDED_14   0x6
+#define  CAN_FCLK_OSC_DIVIDED_0    0x7
 
 //AM:CANOCR PG:OCR
 #define CAN_NORMAL_OUTPUT_MODE                  0x02
@@ -94,12 +89,18 @@ typedef struct {
     //---------------//
     __IOM uint32_t   CANRMC;                    // Offset 0x64
     __IOM uint32_t   CANRBSA;                   // Offset 0x68
-    __IOM uint32_t   CANCDR;                    // Offset 0x6C
+    __IOM uint32_t   CANCDR;                    // Clock Divider Register (CDR): Address 1Fh 
 } wj_can_reg_t;
 
 
 typedef void (*can_event_cb_t)(int32_t idx, can_event_e event);   ///< Pointer to \ref can_event_cb_t : USART Event call back.
 can_handle_t csi_can_initialize(int32_t idx, can_event_cb_t cb_event);
+int32_t drv_can_config_clock(can_handle_t handle, uint32_t fclk_osc_enable, uint32_t fclk_osc);
+int32_t drv_can_config_OCR(can_handle_t handle, uint32_t output_cfg);
+int32_t drv_can_config_IER_enable(can_handle_t handle, uint32_t interrupt_enable);
+int32_t drv_can_config_IER_disable(can_handle_t handle, uint32_t interrupt_disable);
+int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, uint32_t acr, uint32_t amr);
+
 
 #ifdef __cplusplus
 }
