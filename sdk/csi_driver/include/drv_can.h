@@ -1,29 +1,23 @@
 #ifndef _CSI_CAN_H_
 #define _CSI_CAN_H_
-
 #include <drv_common.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
 //AM:CANMOD     PG:MODE REGISTER (MOD): ADDRESS 00h
 //#define  WJ_CAN_MODE_OPERATION      (0x1UL<<0)
 typedef enum {
-    CAN_MODE_OPERATION  = 0,
+    CAN_MODE_NONE = 0,
+    CAN_MODE_OPERATION,
     CAN_MODE_RESET,
     CAN_MODE_ACCEPTANCE_SINGLE_FILTER,
-    CAN_MODE_ACCEPTANCE_DUAL_FILTER
+    CAN_MODE_ACCEPTANCE_DUAL_FILTER,
 } can_mode_e;
-
 
 #define ERR_CAN(errno) (CSI_DRV_ERRNO_CAN_BASE | errno)
 #define CAN_NULL_PARAM_CHK(para) HANDLE_PARAM_CHK(para, ERR_CAN(DRV_ERROR_PARAMETER))
-
-
-#define  ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
-
+#define ARRAY_SIZE(array) (sizeof(array)/sizeof(array[0]))
 
 typedef void *can_handle_t;
 

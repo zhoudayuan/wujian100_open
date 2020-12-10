@@ -13,6 +13,8 @@
 #include "wj_can.h"
 
 
+#define can_log(format, ...)    printf("[%s:%d] "format"\n", __func__, __LINE__, ##__VA_ARGS__)
+
 
 void test_pin_can_init(void)
 {
@@ -52,13 +54,6 @@ static void test_can_fun(void)
 
 static void test_can_fun(void)
 {
-    can_handle_t pcsi_can;
-    pcsi_can = csi_can_initialize(0 , NULL);
-    drv_can_config_mode(pcsi_can,  CAN_MODE_RESET);
-
-    
-//    ASSERT_TRUE(pin != NULL);
-
 }
 
 
@@ -82,8 +77,7 @@ static void test_can_interfaces(void)
     drv_can_config_IER_disable(pcsi_can, CAN_RECEIVE_INTERRUPT);
     drv_can_config_mode(pcsi_can, CAN_MODE_ACCEPTANCE_SINGLE_FILTER);
     drv_can_config_acceptance_filters(pcsi_can, CAN_MODE_ACCEPTANCE_SINGLE_FILTER);
-
-
+    drv_can_config_clock(pcsi_can, CAN_CLKOUT_ENABLE, CAN_FCLK_OSC_DIVIDED_4);
 
 	// 配置时序
 	// 接受过滤器将应用于收到的邮件
@@ -92,7 +86,40 @@ static void test_can_interfaces(void)
 	ASSERT_TRUE(pcsi_can != NULL);
     csi_can_send(pcsi_can, data, ARRAY_SIZE(data));
     //csi_can_config(pcsi_can, CAN_MODE_OPERATION);
+
 }
+
+
+
+
+
+
+
+static void test_can_transmission(void)
+{
+
+    wj_can_priv_t *pcsi_can;
+    wj_can_reg_t  *addr;
+    
+    uint8_t data[] = {1,2,3,4};
+    pcsi_can = (wj_can_priv_t *)csi_can_initialize(0 , NULL);
+    if (pcsi_can->mode == CAN_MODE_OPERATION)
+    {
+        csi_can_set_mode(pcsi_can, CAN_MODE_OPERATION);
+    }
+
+    if (is_transmit_buffer_free(pcsi_can) == TRUE)
+    {
+        printf("[%s:%d] is_transmit_buffer_free faill", __func__, __LINE__);
+        return;
+    }
+
+
+
+
+    
+}
+
 
 
 int test_can(void)
@@ -102,11 +129,13 @@ int test_can(void)
     };
     dtest_suite_t *test_suite = dtest_add_suite(&test_suite_info);
     dtest_case_info_t test_case_info_array[] = {
-//		{"test_can_rw_reg",      test_can_rw_reg,     CAN_TEST_REG_EN},
-        { "test_can_fun",        test_can_fun,        CAN_TEST_FUN_EN },
-        { "test_can_interfaces", test_can_interfaces, CAN_TEST_INTERFACE_EN },
+//		{"test_can_rw_reg",        test_can_rw_reg,       CAN_TEST_REG_EN},
+        { "test_can_fun",          test_can_fun,          CAN_TEST_FUN_EN},
+        { "test_can_interfaces",   test_can_interfaces,   CAN_TEST_INTERFACE_EN},
+//        { "test_can_transmission", test_can_transmission, CAN_TEST_TRANSMISSION_EN},
         { NULL, NULL }
     };
+
     dtest_add_cases(test_suite, test_case_info_array);
     return 0;
 }

@@ -103,6 +103,9 @@ can_handle_t drv_can_initialize(int32_t idx, can_event_cb_t cb_event)
 
 int32_t csi_can_config(can_handle_t handle, can_mode_e mode)
 {
+
+    //(wj_can_priv_t *)
+
 	return drv_can_config_mode(handle, mode);
 }
 
@@ -156,8 +159,6 @@ int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode)
     }
     return 0;
 }
-
-
 
 /*
     setp-1:Set CLKOUT frequency, derived from XTAL1 input
@@ -221,45 +222,30 @@ int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, ui
     addr->CANACR1 = (acr >> 8)  & 0xff;
     addr->CANACR2 = (acr >> 16) & 0xff;
     addr->CANACR3 = (acr >> 24) & 0xff;
-
-    
-
 }
 
 
 void csi_can_send(can_handle_t pcsi_can, const void *data, uint32_t num)
 {
-    drv_can_config_mode(pcsi_can, CAN_MODE_OPERATION);
-    drv_can_send(pcsi_can, data, num);
+
+    
 }
 
 
-#if  0
-int32_t wj_can_set_mode(can_handle_t handle, can_mode_e mode)
+
+int32_t csi_can_set_mode(can_handle_t handle, can_mode_e mode)
 {
+	wj_can_priv_t *can_priv = handle;
     CAN_NULL_PARAM_CHK(handle);
 
     if ((int32_t)mode < 0) {
         return 0;
     }
-
-    wj_can_priv_t *can_priv = (wj_can_priv_t *)handle;
-    wj_can_reg_t *addr      = (wj_can_reg_t *)(can_priv->base);
-
-    switch (mode) {
-        case CAN_MODE_OPERATION:
-            addr->CANMOD &= ~WJ_CAN_MODE_OPERATION;
-            break;
-        case CAN_MODE_RESET:
-            addr->CANMOD |=  WJ_CAN_MODE_OPERATION;
-            break;
-        default:
-            return ERR_CAN(DRV_ERROR_PARAMETER);
-    }
+    drv_can_config_mode(handle, mode);
     can_priv->mode = mode;
     return 0;
 }
-#endif
+
 
 
 int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num)
@@ -269,7 +255,6 @@ int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num)
     }
 
     wj_can_priv_t *can_priv = handle;
-    //wj_can_set_mode(can_priv, CAN_MODE_OPERATION);
     wj_can_reg_t *addr = (wj_can_reg_t *)(can_priv->base);
 
 	int timeout = 1000000;
@@ -282,6 +267,17 @@ int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num)
 }
 
 
+int32_t is_transmit_buffer_free(can_handle_t handle)
+{
+    int timeout = 1000000;
+    wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
+    while (((addr->CANSR & CAN_SR_TRANSMIT_BUFFER_LOCKED) == 0) && (timeout--));
+    if (timeout < 0)
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
 
 
 

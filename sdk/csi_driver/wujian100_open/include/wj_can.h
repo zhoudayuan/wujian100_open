@@ -7,8 +7,12 @@
 extern "C" {
 #endif
 
-
-
+#ifndef TRUE
+#define TRUE    1
+#endif
+#ifndef FALSE
+#define FALSE   0
+#endif
 
 
 #define CAN_BIT_SLEEP_MODE                (1UL<<4)
@@ -99,7 +103,7 @@ int32_t drv_can_config_clock(can_handle_t handle, uint32_t fclk_osc_enable, uint
 int32_t drv_can_config_OCR(can_handle_t handle, uint32_t output_cfg);
 int32_t drv_can_config_IER_enable(can_handle_t handle, uint32_t interrupt_enable);
 int32_t drv_can_config_IER_disable(can_handle_t handle, uint32_t interrupt_disable);
-int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, uint32_t acr, uint32_t amr);
+//int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, uint32_t acr, uint32_t amr);
 
 
 #ifdef __cplusplus
