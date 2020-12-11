@@ -95,7 +95,7 @@ static void test_can_interfaces(void)
 
 
 
-static void test_can_transmission(void)
+static int32_t test_can_transmission(void)
 {
 
     wj_can_priv_t *pcsi_can;
@@ -108,13 +108,13 @@ static void test_can_transmission(void)
         csi_can_set_mode(pcsi_can, CAN_MODE_OPERATION);
     }
 
-    if (is_transmit_buffer_free(pcsi_can) == TRUE)
+    if (drv_is_transmit_buffer_free(pcsi_can) == TRUE)
     {
-        printf("[%s:%d] is_transmit_buffer_free faill", __func__, __LINE__);
-        return;
+        printf("[%s:%d] drv_is_transmit_buffer_free faill", __func__, __LINE__);
+        return FALSE;
     }
 
-
+    csi_write_transmit_buf(pcsi_can, data, ARRAY_SIZE(data))
 
 
     

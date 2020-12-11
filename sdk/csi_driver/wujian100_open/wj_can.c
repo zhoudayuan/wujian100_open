@@ -247,6 +247,13 @@ int32_t csi_can_set_mode(can_handle_t handle, can_mode_e mode)
 }
 
 
+int32_t csi_write_transmit_buf(can_handle_t handle, const void *data, uint32_t num)
+{
+    return 0;
+}
+
+
+
 
 int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num)
 {
@@ -267,7 +274,7 @@ int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num)
 }
 
 
-int32_t is_transmit_buffer_free(can_handle_t handle)
+int32_t drv_is_transmit_buffer_free(can_handle_t handle)
 {
     int timeout = 1000000;
     wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
