@@ -118,6 +118,8 @@ static int32_t test_can_transmission(void)
 
 
     
+    drv_can_config_mode(pcsi_can, CAN_MODE_OPERATION);  // ÅäÖÃÎªOPÄ£Ê½
+    csi_can_send(pcsi_can, data, ARRAY_SIZE(data), CAN_FRAME_REMOTE);
 }
 
 
