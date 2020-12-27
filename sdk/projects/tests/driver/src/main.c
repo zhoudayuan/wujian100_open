@@ -194,13 +194,13 @@ int __attribute__((weak)) main(void)
     do {
         printf("*** test drivers round-%d ***\n", round);
         dtest_init();
-#if RYAM001A_TEST_DEL
+
         dtest_main();
         dtest_run();
         dtest_print_result();
         dtest_cleanup();
         round++;
-#endif
+
         if (loop_count > 0) {
             loop_count--;
         }

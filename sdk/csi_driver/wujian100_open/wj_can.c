@@ -7,7 +7,9 @@
 #include <drv_gpio.h>
 #include <soc.h>
 
+
 extern int32_t target_can_init(int32_t idx, uint32_t *base, uint32_t *irq, void **handler);
+
 
 typedef struct {
     uint32_t base;
@@ -44,7 +46,11 @@ typedef struct {
 #endif
 } wj_can_priv_t;
 
+
+
 static wj_can_priv_t can_instance[CONFIG_USI_NUM];
+
+
 
 
 void wj_CAN_irqhandler(int idx)
@@ -175,7 +181,7 @@ int32_t drv_can_config_clock(can_handle_t handle, uint32_t clkout_enable, uint32
 
 /*
     setp-2:Configure the output driver for outputs TX0 and TX1
-*/ 
+*/
 int32_t drv_can_config_OCR(can_handle_t handle, uint32_t output_cfg)
 {
     CAN_NULL_PARAM_CHK(handle);
@@ -187,7 +193,7 @@ int32_t drv_can_config_OCR(can_handle_t handle, uint32_t output_cfg)
 
 /*
     setp-3:Enable required interrupts
-*/ 
+*/
 int32_t drv_can_config_IER_enable(can_handle_t handle, uint32_t interrupt_enable)
 {
     CAN_NULL_PARAM_CHK(handle);
@@ -198,7 +204,7 @@ int32_t drv_can_config_IER_enable(can_handle_t handle, uint32_t interrupt_enable
 
 /*
     setp-4:Enable required interrupts
-*/ 
+*/
 int32_t drv_can_config_IER_disable(can_handle_t handle, uint32_t interrupt_disable)
 {
     CAN_NULL_PARAM_CHK(handle);
@@ -209,26 +215,27 @@ int32_t drv_can_config_IER_disable(can_handle_t handle, uint32_t interrupt_disab
 
 /*
     setp-5-6:Set to select required range of identifiers
-*/ 
+*/
 int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, uint32_t acr, uint32_t amr)
 {
     CAN_NULL_PARAM_CHK(handle);
     wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
-    addr->CANACR0 = acr & 0xff;
-    addr->CANACR1 = (acr >> 8)  & 0xff;
-    addr->CANACR2 = (acr >> 16) & 0xff;
-    addr->CANACR3 = (acr >> 24) & 0xff;
-    addr->CANACR0 = acr & 0xff;
-    addr->CANACR1 = (acr >> 8)  & 0xff;
-    addr->CANACR2 = (acr >> 16) & 0xff;
-    addr->CANACR3 = (acr >> 24) & 0xff;
+    addr->U.A.CANACR[0] = acr & 0xff;
+    addr->U.A.CANACR[1] = (acr >> 8)  & 0xff;
+    addr->U.A.CANACR[2] = (acr >> 16) & 0xff;
+    addr->U.A.CANACR[3] = (acr >> 24) & 0xff;
+    addr->U.A.CANAMR[0] = amr & 0xff;
+    addr->U.A.CANAMR[1] = (amr >> 8)  & 0xff;
+    addr->U.A.CANAMR[2] = (amr >> 16) & 0xff;
+    addr->U.A.CANAMR[3] = (amr >> 24) & 0xff;
+    return 0;
 }
 
 
 void csi_can_send(can_handle_t pcsi_can, const void *data, uint32_t num)
 {
 
-    
+
 }
 
 

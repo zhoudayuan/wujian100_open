@@ -15,6 +15,7 @@
 
 #define can_log(format, ...)    printf("[%s:%d] "format"\n", __func__, __LINE__, ##__VA_ARGS__)
 
+static void test_can_rw_reg(void);
 
 void test_pin_can_init(void)
 {
@@ -97,29 +98,23 @@ static void test_can_interfaces(void)
 
 static int32_t test_can_transmission(void)
 {
-
-    wj_can_priv_t *pcsi_can;
+    can_handle_t *pcsi_can;
     wj_can_reg_t  *addr;
-    
     uint8_t data[] = {1,2,3,4};
-    pcsi_can = (wj_can_priv_t *)csi_can_initialize(0 , NULL);
-    if (pcsi_can->mode == CAN_MODE_OPERATION)
-    {
-        csi_can_set_mode(pcsi_can, CAN_MODE_OPERATION);
-    }
-
+    pcsi_can = (can_handle_t *)csi_can_initialize(0 , NULL);
+    csi_can_set_mode(pcsi_can, CAN_MODE_OPERATION);
     if (drv_is_transmit_buffer_free(pcsi_can) == TRUE)
     {
         printf("[%s:%d] drv_is_transmit_buffer_free faill", __func__, __LINE__);
         return FALSE;
     }
 
-    csi_write_transmit_buf(pcsi_can, data, ARRAY_SIZE(data))
+    csi_write_transmit_buf(pcsi_can, data, ARRAY_SIZE(data));
 
 
     
     drv_can_config_mode(pcsi_can, CAN_MODE_OPERATION);  // ÅäÖÃÎªOPÄ£Ê½
-    csi_can_send(pcsi_can, data, ARRAY_SIZE(data), CAN_FRAME_REMOTE);
+//    csi_can_send(pcsi_can, data, ARRAY_SIZE(data), CAN_FRAME_REMOTE);
 }
 
 
@@ -131,16 +126,64 @@ int test_can(void)
     };
     dtest_suite_t *test_suite = dtest_add_suite(&test_suite_info);
     dtest_case_info_t test_case_info_array[] = {
-//		{"test_can_rw_reg",        test_can_rw_reg,       CAN_TEST_REG_EN},
-        { "test_can_fun",          test_can_fun,          CAN_TEST_FUN_EN},
-        { "test_can_interfaces",   test_can_interfaces,   CAN_TEST_INTERFACE_EN},
+        {"test_can_rw_reg",        test_can_rw_reg,       CAN_TEST_REG_EN},
+//        { "test_can_fun",          test_can_fun,          CAN_TEST_FUN_EN},
+//        { "test_can_interfaces",   test_can_interfaces,   CAN_TEST_INTERFACE_EN},
 //        { "test_can_transmission", test_can_transmission, CAN_TEST_TRANSMISSION_EN},
-        { NULL, NULL }
+          { NULL, NULL }
     };
-
     dtest_add_cases(test_suite, test_case_info_array);
     return 0;
 }
 
 
+
+
+
+static void test_can_rw_reg(void)
+{
+    can_handle_t *pcsi_can = csi_can_initialize(0 , NULL)
+    drv_can_config_mode(pcsi_can, CAN_MODE_RESET);
+    show_can_reg();
+}
+
+
+static void show_can_reg(can_handle_t handle, )
+{
+}
+
+
+
+#if 0
+#define CANMOD_ADDR                        //Offset 0x00 MOD                    Read/Write  Read/Write
+#define CANCMR_ADDR                        //Offset 0x01 CMR                    Write only  Write only
+#define CANSR_ADDR                         //Offset 0x02 SR                     Read only   Read only
+#define CANIR_ADDR                         //Offset 0x03 IR                     Read only   Read only
+#define CANIER_ADDR                        //Offset 0x04 IER                    Read/Write  Read/Write
+#define Reserved0_ADDR                     //Offset 0x05 Reserved0              N/A         N/A
+#define CANBTR0_ADDR                       //Offset 0x06 BTR0                   Read only   Read/Write
+#define CANBTR1_ADDR                       //Offset 0x07 BTR1                   Read only   Read/Write
+#define CANOCR_ADDR                        //Offset 0x08 OCR                    Read only   Read/Write
+#define Reserved1_ADDR                     //Offset 0x09 Reserved1              N/A         N/A
+#define Reserved2_ADDR                     //Offset 0x0A Reserved2              N/A         N/A
+#define CANALC_ADDR                        //Offset 0x0B ALC                    Read only   Read only
+#define CANECC_ADDR                        //Offset 0x0C ECC                    Read only   Read only
+#define CANTEWLR_ADDR                      //Offset 0x0D EWLR                   Read only   Read/Write
+#define CANRXERR_ADDR                      //Offset 0x0E RXERR                  Read only   Read/Write
+#define CANTXERR_ADDR                      //Offset 0x0F TXERR                  Read only   Read/Write
+#define CANTransmit_ADDR                   //Offset 0x10 Transmit               Write
+#define CANTransmit_buf[0x0C]_ADDR         //Offset 0x11-1C Transmit_BUF        Write
+#define CANReceive_ADDR                    //Offset 0x10                        Read
+#define CANReceive_buf[0x0C]_ADDR          //Offset 0x11-0x1C Receive_buf       Read
+#define CANWindow[0x0C]_ADDR               //Offset 0x11-0x1C
+#define CANACR[4]_ADDR                     //Offset 0X10-0x13
+#define CANAMR[4]_ADDR                     //Offset 0x14-0x17
+#define CANRMC_ADDR                        //Offset 0x1D RMC                    Read only   Read only
+#define CANRBSA_ADDR                       //Offset 0x1E RBSA                   Read only  Read/Write
+#define CANCDR_ADDR                        //Offset 0x1F CDR                    Read/Write  Read/Write
+#define CANReceive_FIFO[0x40]_ADDR         //Offset 0x20-5F CDR                 Read only  Read/Write
+#define CANTransmit_Buffer[0x0d]_ADDR      //Offset 0x60-0x6C Transmit Buffer   Read only  Read only
+#define CANReserved3[0x13]_ADDR            //Offset 0x6D-0x7F Transmit Buffer   N/A        N/A
+
+#endif
 

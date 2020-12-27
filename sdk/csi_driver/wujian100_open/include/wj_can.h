@@ -29,7 +29,7 @@ extern "C" {
 
 
 //CLOCK DIVIDER REGISTER (CDR):  ADDRESS 1Fh
-#define  CAN_CLKOUT_DISABLE        (1UL<<3)  // Setting this bit allows the external CLKOUT signal to be disabled. 
+#define  CAN_CLKOUT_DISABLE        (1UL<<3)  // Setting this bit allows the external CLKOUT signal to be disabled.
 #define  CAN_CLKOUT_ENABLE         (0UL<<3)
 #define  CAN_FCLK_OSC_DIVIDED_2    0x0
 #define  CAN_FCLK_OSC_DIVIDED_4    0x1
@@ -55,6 +55,50 @@ extern "C" {
 #define CAN_RECEIVE_INTERRUPT            (0)
 
 
+
+
+typedef struct {
+    __IOM uint8_t  CANMOD;                //Offset 0x00 MOD                    Read/Write  Read/Write
+    __OM  uint8_t  CANCMR;                //Offset 0x01 CMR                    Write only  Write only
+    __IM  uint8_t  CANSR;                 //Offset 0x02 SR                     Read only   Read only
+    __IM  uint8_t  CANIR;                 //Offset 0x03 IR                     Read only   Read only
+    __IOM uint8_t  CANIER;                //Offset 0x04 IER                    Read/Write  Read/Write
+    __IOM uint8_t  Reserved0;             //Offset 0x05 Reserved0              N/A         N/A
+    __IM  uint8_t  CANBTR0;               //Offset 0x06 BTR0                   Read only   Read/Write
+    __IM  uint8_t  CANBTR1;               //Offset 0x07 BTR1                   Read only   Read/Write
+    __IOM uint8_t  CANOCR;                //Offset 0x08 OCR                    Read only   Read/Write
+    __IOM uint8_t  Reserved1;             //Offset 0x09 Reserved1              N/A         N/A
+    __IOM uint8_t  Reserved2;             //Offset 0x0A Reserved2              N/A         N/A
+    __IM  uint8_t  CANALC;                //Offset 0x0B ALC                    Read only   Read only
+    __IM  uint8_t  CANECC;                //Offset 0x0C ECC                    Read only   Read only
+    __IM  uint8_t  CANTEWLR;              //Offset 0x0D EWLR                   Read only   Read/Write
+    __IM  uint8_t  CANRXERR;              //Offset 0x0E RXERR                  Read only   Read/Write
+    __IM  uint8_t  CANTXERR;              //Offset 0x0F TXERR                  Read only   Read/Write
+    
+    union _U{
+        struct _T {
+            __OM  uint8_t  CANTransmit;              //Offset 0x10 Transmit               Write
+            __OM  uint8_t  CANTransmit_buf[0x0C];    //Offset 0x11-1C Transmit_BUF        Write
+        }T;
+        struct _R {
+            __IM  uint8_t  CANReceive;               //Offset 0x10                        Read
+            __IM  uint8_t  CANReceive_buf[0x0C];     //Offset 0x11-0x1C Receive_buf       Read
+            __IOM uint8_t  CANWindow[0x0C];          //Offset 0x11-0x1C
+        }R;
+        struct _A {        
+            __IOM uint8_t  CANACR[4];                //Offset 0X10-0x13
+            __IOM uint8_t  CANAMR[4];                //Offset 0x14-0x17
+        } A;
+    }U;
+    __IM  uint8_t  CANRMC;                   //Offset 0x1D RMC                    Read only   Read only
+    __IM  uint8_t  CANRBSA;                  //Offset 0x1E RBSA                   Read only  Read/Write
+    __IOM uint8_t  CANCDR;                   //Offset 0x1F CDR                    Read/Write  Read/Write
+    __IM  uint8_t  CANReceive_FIFO[0x40];    //Offset 0x20-5F CDR                 Read only  Read/Write
+    __IM  uint8_t  CANTransmit_Buffer[0x0d]; //Offset 0x60-0x6C Transmit Buffer   Read only  Read only
+    __IOM uint8_t  CANReserved3[0x13];       //Offset 0x6D-0x7F Transmit Buffer   N/A        N/A
+} wj_can_reg_t;
+
+#if 0
 typedef struct {
     __IOM uint32_t   CANMOD;                    // Offset 0x00 controller MODe setting register
     __IOM uint32_t   CANCMR;                    // Offset 0x04 CAN controller ComMand Register.
@@ -93,8 +137,10 @@ typedef struct {
     //---------------//
     __IOM uint32_t   CANRMC;                    // Offset 0x64
     __IOM uint32_t   CANRBSA;                   // Offset 0x68
-    __IOM uint32_t   CANCDR;                    // Clock Divider Register (CDR): Address 1Fh 
+    __IOM uint32_t   CANCDR;                    // Clock Divider Register (CDR): Address 1Fh
 } wj_can_reg_t;
+
+#endif
 
 
 typedef void (*can_event_cb_t)(int32_t idx, can_event_e event);   ///< Pointer to \ref can_event_cb_t : USART Event call back.

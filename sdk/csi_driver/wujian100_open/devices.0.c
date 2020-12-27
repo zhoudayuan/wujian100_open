@@ -416,7 +416,9 @@ struct {
     uint32_t base;
     uint32_t irq;
     void *handler;
-} const sg_can_config[CONFIG_CAN_NUM] = {
+}
+const
+sg_can_config[CONFIG_CAN_NUM] = {
     {WJ_CAN_BASE, CAN_IRQn, CAN_IRQHandler},
 };
 
