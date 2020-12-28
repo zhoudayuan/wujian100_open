@@ -98,6 +98,9 @@ typedef struct {
     __IOM uint8_t  CANReserved3[0x13];       //Offset 0x6D-0x7F Transmit Buffer   N/A        N/A
 } wj_can_reg_t;
 
+#define get_can_reg_addr_base(_handle)  ((wj_can_reg_t *)(((wj_can_priv_t *)_handle)->base))
+
+
 #if 0
 typedef struct {
     __IOM uint32_t   CANMOD;                    // Offset 0x00 controller MODe setting register
@@ -141,6 +144,55 @@ typedef struct {
 } wj_can_reg_t;
 
 #endif
+
+
+#define CANMOD_ID                    0         // MOD             Read/Write  Read/Write            
+#define CANCMR_ID                    1         // CMR             Write only  Write only            
+#define CANSR_ID                     2         // SR              Read only   Read only             
+#define CANIR_ID                     3         // IR              Read only   Read only             
+#define CANIER_ID                    4         // IER             Read/Write  Read/Write            
+#define CANBTR0_ID                   5         // BTR0            Read only   Read/Write            
+#define CANBTR1_ID                   6         // BTR1            Read only   Read/Write            
+#define CANOCR_ID                    7         // OCR             Read only   Read/Write            
+#define CANALC_ID                    8         // ALC             Read only   Read only             
+#define CANECC_ID                    9          // ECC             Read only   Read only            
+#define CANTEWLR_ID                  10         // EWLR            Read only   Read/Write           
+#define CANRXERR_ID                  11         // RXERR           Read only   Read/Write           
+#define CANTXERR_ID                  12         // TXERR           Read only   Read/Write           
+#define CANTransmit_ID               13         // Transmit        Write                            
+#define CANTransmit_buf_ID           14         // Transmit_BUF    Write  len_12  base  offset      
+#define CANReceive_ID                15         //                 Read                             
+#define CANReceive_buf_ID            16         //  Receive_buf    Read   len_12  base  offset      
+#define CANWindow_ID                 17         //                                                  
+#define CANACR_ID                    18         //                 len_12  base  offset             
+#define CANAMR_ID                    19         //                 len_12  base  offset             
+#define CANRMC_ID                    20         // RMC             Read only   Read only            
+#define CANRBSA_ID                   21         // RBSA            Read only  Read/Write            
+#define CANCDR_ID                    22         // CDR             Read/Write  Read/Write           
+#define CANReceive_FIFO_ID           23         // CDR             Read only  Read/Write            
+#define CANTransmit_Buffer_ID        24         // Transmit Buffer Read only  Read only             
+
+typedef enum {
+    CAN_READ,
+    CAN_WRITE,
+    CAN_SHOW
+} can_op_e;
+
+
+typedef int32_t  (*op_can_f)(can_handle_t handle, uint32_t base, uint32_t offset);
+
+typedef struct _t_can_reg_op {
+	uint32_t    id;
+	op_can_f    can_fun[3];
+} t_can_reg_op;
+
+
+int32_t read_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset);
+int32_t write_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset);
+int32_t show_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset);
+
+
+
 
 
 typedef void (*can_event_cb_t)(int32_t idx, can_event_e event);   ///< Pointer to \ref can_event_cb_t : USART Event call back.

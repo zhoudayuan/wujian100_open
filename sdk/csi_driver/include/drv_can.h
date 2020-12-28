@@ -30,6 +30,7 @@ typedef enum {
 
 
 
+
 typedef void (*can_event_cb_t)(int32_t idx, can_event_e event);   ///< Pointer to \ref can_event_cb_t : USART Event call back.
 can_handle_t drv_can_initialize(int32_t idx, can_event_cb_t cb_event);
 int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode);

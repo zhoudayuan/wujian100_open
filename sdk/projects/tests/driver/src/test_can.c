@@ -24,6 +24,37 @@ void test_pin_can_init(void)
 
 }
 
+t_can_reg_op can_reg_op[] = {
+	{CANMOD_ID             , {read_CANMOD_reg             , write_CANMOD_reg             , show_CANMOD_reg             }},   // MOD             Read/Write  Read/Write
+#if  0
+	{CANCMR_ID             , {read_CANCMR_reg             , write_CANCMR_reg             , show_CANCMR_reg             }},   // CMR             Write only  Write only
+	{CANSR_ID              , {read_CANSR_reg              , NULL			             , show_CANSR_reg              }},   // SR              Read only   Read only
+	{CANIR_ID              , {read_CANIR_reg              , NULL              			 , show_CANIR_reg              }},   // IR              Read only   Read only
+	{CANIER_ID             , {read_CANIER_reg             , write_CANIER_reg             , show_CANIER_reg             }},   // IER             Read/Write  Read/Write
+	{CANBTR0_ID            , {read_CANBTR0_reg            , write_CANBTR0_reg            , show_CANBTR0_reg            }},   // BTR0            Read only   Read/Write
+	{CANBTR1_ID            , {read_CANBTR1_reg            , write_CANBTR1_reg            , show_CANBTR1_reg            }},   // BTR1            Read only   Read/Write
+	{CANOCR_ID             , {read_CANOCR_reg             , write_CANOCR_reg             , show_CANOCR_reg             }},   // OCR             Read only   Read/Write
+	{CANALC_ID             , {read_CANALC_reg             , NULL             			 , show_CANECC_reg             }},   // ALC             Read only   Read only
+	{CANECC_ID             , {read_CANECC_reg             , NULL             			 , show_CANECC_reg             }},   // ECC             Read only   Read only
+	{CANTEWLR_ID           , {read_CANTEWLR_reg           , write_CANTEWLR_reg           , show_CANTEWLR_reg           }},   // EWLR            Read only   Read/Write
+	{CANRXERR_ID           , {read_CANRXERR_reg           , write_CANRXERR_reg           , show_CANRXERR_reg           }},   // RXERR           Read only   Read/Write
+	{CANTXERR_ID           , {read_CANTXERR_reg           , write_CANTXERR_reg           , show_CANTXERR_reg           }},   // TXERR           Read only   Read/Write
+	{CANTransmit_ID        , {read_CANTransmit_reg        , write_CANTransmit_reg        , show_CANTransmit_reg        }},   // Transmit        Write
+	{CANTransmit_buf_ID    , {read_CANTransmit_buf_reg    , write_CANTransmit_buf_reg    , show_CANTransmit_buf_reg    }},   // Transmit_BUF    Write  len_12  base  offset
+	{CANReceive_ID         , {read_CANReceive_reg         , write_CANReceive_reg         , show_CANReceive_reg         }},   //                 Read
+	{CANReceive_buf_ID     , {read_CANReceive_buf_reg     , NULL     					 , show_CANReceive_buf_reg     }},   //  Receive_buf    Read   len_12  base  offset
+	{CANWindow_ID          , {read_CANWindow_reg          , NULL          				 , show_CANWindow_reg          }},   //
+	{CANACR_ID             , {read_CANACR_reg             , write_CANACR_reg             , show_CANACR_reg             }},   //                 len_12  base  offset
+	{CANAMR_ID             , {read_CANAMR_reg             , write_CANAMR_reg             , show_CANAMR_reg             }},   //                 len_12  base  offset
+	{CANRMC_ID             , {read_CANRMC_reg             , write_CANRMC_reg             , show_CANRMC_reg             }},   // RMC             Read only   Read only
+	{CANRBSA_ID            , {read_CANRBSA_reg            , write_CANRBSA_reg            , show_CANRBSA_reg            }},   // RBSA            Read only  Read/Write
+	{CANCDR_ID             , {read_CANCDR_reg             , write_CANCDR_reg             , show_CANCDR_reg             }},   // CDR             Read/Write  Read/Write
+	{CANReceive_FIFO_ID    , {read_CANReceive_FIFO_reg    , write_CANReceive_FIFO_reg    , show_CANReceive_FIFO_reg    }},   // CDR             Read only  Read/Write
+	{CANTransmit_Buffer_ID , {read_CANTransmit_Buffer_reg , write_CANTransmit_Buffer_reg , show_CANTransmit_Buffer_reg }},   // Transmit Buffer Read only  Read only
+#endif
+};
+
+
 
 
 #if  0
@@ -80,10 +111,10 @@ static void test_can_interfaces(void)
     drv_can_config_acceptance_filters(pcsi_can, CAN_MODE_ACCEPTANCE_SINGLE_FILTER);
     drv_can_config_clock(pcsi_can, CAN_CLKOUT_ENABLE, CAN_FCLK_OSC_DIVIDED_4);
 
-	// 配置时序
-	// 接受过滤器将应用于收到的邮件
-	// 传输位流的副本或TX1上的传输时钟
-	// 中断配置
+	// 閰嶇疆鏃跺簭
+	// 鎺ュ彈杩囨护鍣ㄥ皢搴旂敤浜庢敹鍒扮殑閭欢
+	// 浼犺緭浣嶆祦鐨勫壇鏈垨TX1涓婄殑浼犺緭鏃堕挓
+	// 涓柇閰嶇疆
 	ASSERT_TRUE(pcsi_can != NULL);
     csi_can_send(pcsi_can, data, ARRAY_SIZE(data));
     //csi_can_config(pcsi_can, CAN_MODE_OPERATION);
@@ -113,7 +144,7 @@ static int32_t test_can_transmission(void)
 
 
     
-    drv_can_config_mode(pcsi_can, CAN_MODE_OPERATION);  // 配置为OP模式
+    drv_can_config_mode(pcsi_can, CAN_MODE_OPERATION);  // 閰嶇疆涓篛P妯″紡
 //    csi_can_send(pcsi_can, data, ARRAY_SIZE(data), CAN_FRAME_REMOTE);
 }
 
@@ -137,53 +168,15 @@ int test_can(void)
 }
 
 
-
-
-
 static void test_can_rw_reg(void)
 {
-    can_handle_t *pcsi_can = csi_can_initialize(0 , NULL)
+    can_handle_t *pcsi_can = csi_can_initialize(0 , NULL);
     drv_can_config_mode(pcsi_can, CAN_MODE_RESET);
-    show_can_reg();
+    show_reg_CANMOD(pcsi_can);
+    
+//    can_reg_op[CANMOD_ID].can_fun[CAN_READ](pcsi_can, 0, 0);
 }
 
 
-static void show_can_reg(can_handle_t handle, )
-{
-}
 
-
-
-#if 0
-#define CANMOD_ADDR                        //Offset 0x00 MOD                    Read/Write  Read/Write
-#define CANCMR_ADDR                        //Offset 0x01 CMR                    Write only  Write only
-#define CANSR_ADDR                         //Offset 0x02 SR                     Read only   Read only
-#define CANIR_ADDR                         //Offset 0x03 IR                     Read only   Read only
-#define CANIER_ADDR                        //Offset 0x04 IER                    Read/Write  Read/Write
-#define Reserved0_ADDR                     //Offset 0x05 Reserved0              N/A         N/A
-#define CANBTR0_ADDR                       //Offset 0x06 BTR0                   Read only   Read/Write
-#define CANBTR1_ADDR                       //Offset 0x07 BTR1                   Read only   Read/Write
-#define CANOCR_ADDR                        //Offset 0x08 OCR                    Read only   Read/Write
-#define Reserved1_ADDR                     //Offset 0x09 Reserved1              N/A         N/A
-#define Reserved2_ADDR                     //Offset 0x0A Reserved2              N/A         N/A
-#define CANALC_ADDR                        //Offset 0x0B ALC                    Read only   Read only
-#define CANECC_ADDR                        //Offset 0x0C ECC                    Read only   Read only
-#define CANTEWLR_ADDR                      //Offset 0x0D EWLR                   Read only   Read/Write
-#define CANRXERR_ADDR                      //Offset 0x0E RXERR                  Read only   Read/Write
-#define CANTXERR_ADDR                      //Offset 0x0F TXERR                  Read only   Read/Write
-#define CANTransmit_ADDR                   //Offset 0x10 Transmit               Write
-#define CANTransmit_buf[0x0C]_ADDR         //Offset 0x11-1C Transmit_BUF        Write
-#define CANReceive_ADDR                    //Offset 0x10                        Read
-#define CANReceive_buf[0x0C]_ADDR          //Offset 0x11-0x1C Receive_buf       Read
-#define CANWindow[0x0C]_ADDR               //Offset 0x11-0x1C
-#define CANACR[4]_ADDR                     //Offset 0X10-0x13
-#define CANAMR[4]_ADDR                     //Offset 0x14-0x17
-#define CANRMC_ADDR                        //Offset 0x1D RMC                    Read only   Read only
-#define CANRBSA_ADDR                       //Offset 0x1E RBSA                   Read only  Read/Write
-#define CANCDR_ADDR                        //Offset 0x1F CDR                    Read/Write  Read/Write
-#define CANReceive_FIFO[0x40]_ADDR         //Offset 0x20-5F CDR                 Read only  Read/Write
-#define CANTransmit_Buffer[0x0d]_ADDR      //Offset 0x60-0x6C Transmit Buffer   Read only  Read only
-#define CANReserved3[0x13]_ADDR            //Offset 0x6D-0x7F Transmit Buffer   N/A        N/A
-
-#endif
 

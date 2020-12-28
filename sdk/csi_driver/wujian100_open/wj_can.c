@@ -53,6 +53,7 @@ static wj_can_priv_t can_instance[CONFIG_USI_NUM];
 
 
 
+
 void wj_CAN_irqhandler(int idx)
 {
 
@@ -291,6 +292,32 @@ int32_t drv_is_transmit_buffer_free(can_handle_t handle)
         return FALSE;
     }
     return TRUE;
+}
+
+int32_t read_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
+{
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    addr->CANMOD;
+
+    return 0;
+}
+
+int32_t write_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
+{
+    return 0;
+}
+
+int32_t show_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
+{
+    return 0;
+}
+
+
+
+void show_reg_CANMOD(can_handle_t handle)
+{
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    printf("%#x", addr->CANMOD);
 }
 
 
