@@ -317,20 +317,15 @@ int32_t show_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
     return 0;
 }
 
-
-
 void show_reg_CANMOD(can_handle_t handle)
 {
     wj_can_reg_t *addr = get_can_reg_addr_base(handle);
     printf("CANMOD:[%#x]", addr->CANMOD);
 }
 
-
 void show_all_r_reg_CANMOD(can_handle_t handle)
 {
     wj_can_reg_t *addr = get_can_reg_addr_base(handle);
-    
-
     printf("|-------------------------|-------|\n");
     printf("|Name                     |Value  |\n");
     printf("|-------------------------|-------|\n");
@@ -342,23 +337,23 @@ void show_all_r_reg_CANMOD(can_handle_t handle)
     printf("|-------------------------|-------|\n");
     PRINT_REG_CAN("CANSR",  addr->CANIR);
     printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NIER",  addr->CANIER);
+    PRINT_REG_CAN("NIER",   addr->CANIER);
     printf("|-------------------------|-------|\n");
     PRINT_REG_CAN("NBTR0",  addr->CANBTR0);
     printf("|-------------------------|-------|\n");
     PRINT_REG_CAN("NBTR1",  addr->CANBTR1);
     printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NOCR",  addr->CANOCR);
+    PRINT_REG_CAN("NOCR",   addr->CANOCR);
     printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NALC",  addr->CANALC);
+    PRINT_REG_CAN("NALC",   addr->CANALC);
     printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NECC",  addr->CANECC);
+    PRINT_REG_CAN("NECC",   addr->CANECC);
     printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NTEWLR",  addr->CANTEWLR);
+    PRINT_REG_CAN("NTEWLR", addr->CANTEWLR);
     printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NRXERR",  addr->CANRXERR);
+    PRINT_REG_CAN("NRXERR", addr->CANRXERR);
     printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NTXERR",  addr->CANTXERR);
+    PRINT_REG_CAN("NTXERR", addr->CANTXERR);
     printf("|-------------------------|-------|\n");
 }
 
