@@ -172,9 +172,10 @@ static void test_can_rw_reg(void)
 {
     can_handle_t *pcsi_can = csi_can_initialize(0 , NULL);
     drv_can_config_mode(pcsi_can, CAN_MODE_RESET);
-    show_reg_CANMOD(pcsi_can);
-    
-//    can_reg_op[CANMOD_ID].can_fun[CAN_READ](pcsi_can, 0, 0);
+    pcsi_can = csi_can_initialize(0 , NULL);
+//    show_reg_CANMOD(pcsi_can);
+    //show_all_reg_CANMOD(pcsi_can);
+	show_all_r_reg_CANMOD(pcsi_can);
 }
 
 
