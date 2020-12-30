@@ -92,10 +92,12 @@ extern "C" {
 
 
 /* CAN case config */
-#define CAN_TEST_REG_EN       	  0x1
-#define CAN_TEST_FUN_EN           0x1
-#define CAN_TEST_INTERFACE_EN 	  0x1
-#define CAN_TEST_TRANSMISSION_EN  0x1
+#define CAN_TEST_REG_RW_SHOW_EN       	  0x0
+#define CAN_TEST_REG_R_SHOW_EN       	  0x1
+#define CAN_TEST_CAN_TRANSMISSION_EN      0x1
+#define CAN_TEST_FUN_EN                   0x1
+#define CAN_TEST_INTERFACE_EN 	          0x1
+#define CAN_TEST_TRANSMISSION_EN          0x1
 
 
 

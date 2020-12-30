@@ -194,7 +194,6 @@ int __attribute__((weak)) main(void)
     do {
         printf("*** test drivers round-%d ***\n", round);
         dtest_init();
-
         dtest_main();
         dtest_run();
         dtest_print_result();

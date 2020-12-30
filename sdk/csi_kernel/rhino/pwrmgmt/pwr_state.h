@@ -23,6 +23,7 @@ This file provides base type define power state.
 extern "C" {
 #endif /* __cplusplus */
 
+
 #ifndef TRUE
 #define TRUE    1
 #endif

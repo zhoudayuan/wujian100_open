@@ -26,10 +26,6 @@ extern "C" {
 
 
 
-//AM:CANSR
-#define  CAN_SR_TRANSMIT_BUFFER_RELEASED        (0x1UL<<2)
-#define  CAN_SR_TRANSMIT_BUFFER_LOCKED          (0x1UL<<2)
-
 
 //CLOCK DIVIDER REGISTER (CDR):  ADDRESS 1Fh
 #define  CAN_CLKOUT_DISABLE        (1UL<<3)  // Setting this bit allows the external CLKOUT signal to be disabled.
@@ -47,15 +43,7 @@ extern "C" {
 #define CAN_NORMAL_OUTPUT_MODE                  0x02
 #define CAN_CLOCK_OUTPUT_MODE                   0x03
 
-//AM:CANIER
-#define CAN_BUS_ERROR_INTERRUPT          (7)
-#define CAN_ARBITRATION_LOST_INTERRUPT   (6)
-#define CAN_ERROR_PASSIVE_INTERRUPT      (5)
-#define CAN_WAKE_UP_INTERRUPT            (4)
-#define CAN_DATA_OVERRUN_INTERRUPT       (3)
-#define CAN_ERROR_WARNING_INTERRUPT      (2)
-#define CAN_TRANSMIT_INTERRUPT           (1)
-#define CAN_RECEIVE_INTERRUPT            (0)
+
 
 #if 1
 typedef struct {
@@ -83,7 +71,6 @@ typedef struct {
         }T;
         struct _R {
             __IM  uint32_t  CANReceive;               //Offset 0x10                        Read
-            __IM  uint32_t  CANReceive_buf[0x0C];     //Offset 0x11-0x1C Receive_buf       Read
             __IOM uint32_t  CANWindow[0x0C];          //Offset 0x11-0x1C
         }R;
         struct _A {        
@@ -246,7 +233,7 @@ typedef void (*can_event_cb_t)(int32_t idx, can_event_e event);   ///< Pointer t
 can_handle_t csi_can_initialize(int32_t idx, can_event_cb_t cb_event);
 int32_t drv_can_config_clock(can_handle_t handle, uint32_t fclk_osc_enable, uint32_t fclk_osc);
 int32_t drv_can_config_OCR(can_handle_t handle, uint32_t output_cfg);
-int32_t drv_can_config_IER_enable(can_handle_t handle, uint32_t interrupt_enable);
+
 int32_t drv_can_config_IER_disable(can_handle_t handle, uint32_t interrupt_disable);
 //int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, uint32_t acr, uint32_t amr);
 void show_all_can_r_reg(can_handle_t handle);
@@ -255,7 +242,10 @@ int32_t write_CANMOD_reg(can_handle_t handle, uint8_t reg_val);
 int32_t write_CANBTR1_reg(can_handle_t handle, uint8_t reg_val);
 int32_t write_CANBTR0_reg(can_handle_t handle, uint8_t reg_val);
 int32_t write_CANEWLR_reg(can_handle_t handle, uint8_t reg_val);
-
+int32_t write_CANTransmit_reg(can_handle_t handle, uint8_t reg_val);
+void show_all_rw_reg_mode_reset(can_handle_t handle);
+void show_all_r_reg_mode_reset(can_handle_t handle);
+int32_t wj_can_transmission(uint8_t *send_buf, uint32_t send_buf_len);
 
 
 
