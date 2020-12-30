@@ -13,7 +13,7 @@
 #include "wj_can.h"
 
 
-#define can_log(format, ...)    printf("[%s:%d] "format"\n", __func__, __LINE__, ##__VA_ARGS__)
+
 
 static void test_can_rw_reg(void);
 
@@ -25,8 +25,9 @@ void test_pin_can_init(void)
 }
 
 t_can_reg_op can_reg_op[] = {
-	{CANMOD_ID             , {read_CANMOD_reg             , write_CANMOD_reg             , show_CANMOD_reg             }},   // MOD             Read/Write  Read/Write
 #if  0
+	{CANMOD_ID             , {read_CANMOD_reg             , write_CANMOD_reg             , show_CANMOD_reg             }},   // MOD             Read/Write  Read/Write
+
 	{CANCMR_ID             , {read_CANCMR_reg             , write_CANCMR_reg             , show_CANCMR_reg             }},   // CMR             Write only  Write only
 	{CANSR_ID              , {read_CANSR_reg              , NULL			             , show_CANSR_reg              }},   // SR              Read only   Read only
 	{CANIR_ID              , {read_CANIR_reg              , NULL              			 , show_CANIR_reg              }},   // IR              Read only   Read only
@@ -170,12 +171,27 @@ int test_can(void)
 
 static void test_can_rw_reg(void)
 {
+    printf("FPGA version: AM001A_Ver_0_1.bit\n");
     can_handle_t *pcsi_can = csi_can_initialize(0 , NULL);
+    show_all_can_r_reg(pcsi_can);
     drv_can_config_mode(pcsi_can, CAN_MODE_RESET);
     pcsi_can = csi_can_initialize(0 , NULL);
-//    show_reg_CANMOD(pcsi_can);
-    //show_all_reg_CANMOD(pcsi_can);
-	show_all_r_reg_CANMOD(pcsi_can);
+    show_all_rw_reg_mode_reset(pcsi_can);
+	write_CANIER_reg(pcsi_can, 0x55);
+	show_all_rw_reg_mode_reset(pcsi_can);
+//    write_CANMOD_reg(pcsi_can, 0x00);
+//    show_all_can_r_reg(pcsi_can);
+    write_CANBTR0_reg(pcsi_can, 0x03);
+    show_all_rw_reg_mode_reset(pcsi_can);
+    write_CANBTR1_reg(pcsi_can, 0x04);
+    show_all_rw_reg_mode_reset(pcsi_can);
+    write_CANEWLR_reg(pcsi_can, 0x55);
+    show_all_rw_reg_mode_reset(pcsi_can);
+
+    
+//    write_CANMOD_reg(pcsi_can, 0x55);
+
+    
 }
 
 

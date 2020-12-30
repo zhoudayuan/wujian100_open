@@ -14,12 +14,15 @@ extern "C" {
 #define FALSE   0
 #endif
 
+#define can_log(format, ...)    printf("[%s:%d] "format"\n", __func__, __LINE__, ##__VA_ARGS__)
+
 
 #define CAN_BIT_SLEEP_MODE                (1UL<<4)
 #define CAN_BIT_ACCEPTANCE_FILTER_MODE    (1UL<<3)
 #define CAN_BIT_SELF_TEST_MODE            (1UL<<2)
 #define CAN_BIT_LISTEN_ONLY_MODE          (1UL<<1)
 #define CAN_BIT_RESET_MODE                (1UL<<0)
+
 
 
 
@@ -54,9 +57,50 @@ extern "C" {
 #define CAN_TRANSMIT_INTERRUPT           (1)
 #define CAN_RECEIVE_INTERRUPT            (0)
 
+#if 1
+typedef struct {
+    __IOM uint32_t  CANMOD;                //Offset 0x00 MOD                    Read/Write  Read/Write
+    __OM  uint32_t  CANCMR;                //Offset 0x01 CMR                    Write only  Write only
+    __IM  uint32_t  CANSR;                 //Offset 0x02 SR                     Read only   Read only
+    __IM  uint32_t  CANIR;                 //Offset 0x03 IR                     Read only   Read only
+    __IOM uint32_t  CANIER;                //Offset 0x04 IER                    Read/Write  Read/Write
+    __IOM uint32_t  Reserved0;             //Offset 0x05 Reserved0              N/A         N/A
+    __IOM uint32_t  CANBTR0;               //Offset 0x06 BTR0                   Read only   Read/Write
+    __IOM uint32_t  CANBTR1;               //Offset 0x07 BTR1                   Read only   Read/Write
+    __IOM uint32_t  CANOCR;                //Offset 0x08 OCR                    Read only   Read/Write
+    __IOM uint32_t  Reserved1;             //Offset 0x09 Reserved1              N/A         N/A
+    __IOM uint32_t  Reserved2;             //Offset 0x0A Reserved2              N/A         N/A
+    __IM  uint32_t  CANALC;                //Offset 0x0B ALC                    Read only   Read only
+    __IM  uint32_t  CANECC;                //Offset 0x0C ECC                    Read only   Read only
+    __IOM uint32_t  CANEWLR;               //Offset 0x0D EWLR                   Read only   Read/Write
+    __IM  uint32_t  CANRXERR;              //Offset 0x0E RXERR                  Read only   Read/Write
+    __IM  uint32_t  CANTXERR;              //Offset 0x0F TXERR                  Read only   Read/Write
+    
+    union _U{
+        struct _T {
+            __OM  uint32_t  CANTransmit;              //Offset 0x10 Transmit               Write
+            __OM  uint32_t  CANTransmit_buf[0x0C];    //Offset 0x11-1C Transmit_BUF        Write
+        }T;
+        struct _R {
+            __IM  uint32_t  CANReceive;               //Offset 0x10                        Read
+            __IM  uint32_t  CANReceive_buf[0x0C];     //Offset 0x11-0x1C Receive_buf       Read
+            __IOM uint32_t  CANWindow[0x0C];          //Offset 0x11-0x1C
+        }R;
+        struct _A {        
+            __IOM uint32_t  CANACR[4];                //Offset 0X10-0x13
+            __IOM uint32_t  CANAMR[4];                //Offset 0x14-0x17
+        } A;
+    }U;
+    __IM  uint32_t  CANRMC;                   //Offset 0x1D RMC                    Read only   Read only
+    __IM  uint32_t  CANRBSA;                  //Offset 0x1E RBSA                   Read only  Read/Write
+    __IOM uint32_t  CANCDR;                   //Offset 0x1F CDR                    Read/Write  Read/Write
+    __IM  uint32_t  CANReceive_FIFO[0x40];    //Offset 0x20-5F CDR                 Read only  Read/Write
+    __IM  uint32_t  CANTransmit_Buffer[0x0d]; //Offset 0x60-0x6C Transmit Buffer   Read only  Read only
+    __IOM uint32_t  CANReserved3[0x13];       //Offset 0x6D-0x7F Transmit Buffer   N/A        N/A
+} wj_can_reg_t;
 
 
-
+#else
 typedef struct {
     __IOM uint8_t  CANMOD;                //Offset 0x00 MOD                    Read/Write  Read/Write
     __OM  uint8_t  CANCMR;                //Offset 0x01 CMR                    Write only  Write only
@@ -64,14 +108,14 @@ typedef struct {
     __IM  uint8_t  CANIR;                 //Offset 0x03 IR                     Read only   Read only
     __IOM uint8_t  CANIER;                //Offset 0x04 IER                    Read/Write  Read/Write
     __IOM uint8_t  Reserved0;             //Offset 0x05 Reserved0              N/A         N/A
-    __IM  uint8_t  CANBTR0;               //Offset 0x06 BTR0                   Read only   Read/Write
-    __IM  uint8_t  CANBTR1;               //Offset 0x07 BTR1                   Read only   Read/Write
+    __IOM uint8_t  CANBTR0;               //Offset 0x06 BTR0                   Read only   Read/Write
+    __IOM uint8_t  CANBTR1;               //Offset 0x07 BTR1                   Read only   Read/Write
     __IOM uint8_t  CANOCR;                //Offset 0x08 OCR                    Read only   Read/Write
     __IOM uint8_t  Reserved1;             //Offset 0x09 Reserved1              N/A         N/A
     __IOM uint8_t  Reserved2;             //Offset 0x0A Reserved2              N/A         N/A
     __IM  uint8_t  CANALC;                //Offset 0x0B ALC                    Read only   Read only
     __IM  uint8_t  CANECC;                //Offset 0x0C ECC                    Read only   Read only
-    __IM  uint8_t  CANTEWLR;              //Offset 0x0D EWLR                   Read only   Read/Write
+    __IOM uint8_t  CANEWLR;               //Offset 0x0D EWLR                   Read only   Read/Write
     __IM  uint8_t  CANRXERR;              //Offset 0x0E RXERR                  Read only   Read/Write
     __IM  uint8_t  CANTXERR;              //Offset 0x0F TXERR                  Read only   Read/Write
     
@@ -97,8 +141,12 @@ typedef struct {
     __IM  uint8_t  CANTransmit_Buffer[0x0d]; //Offset 0x60-0x6C Transmit Buffer   Read only  Read only
     __IOM uint8_t  CANReserved3[0x13];       //Offset 0x6D-0x7F Transmit Buffer   N/A        N/A
 } wj_can_reg_t;
+#endif
+
+
 
 #define get_can_reg_addr_base(_handle)  ((wj_can_reg_t *)(((wj_can_priv_t *)_handle)->base))
+
 
 
 #if 0
@@ -188,7 +236,6 @@ typedef struct _t_can_reg_op {
 
 
 int32_t read_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset);
-int32_t write_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset);
 int32_t show_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset);
 
 
@@ -202,7 +249,13 @@ int32_t drv_can_config_OCR(can_handle_t handle, uint32_t output_cfg);
 int32_t drv_can_config_IER_enable(can_handle_t handle, uint32_t interrupt_enable);
 int32_t drv_can_config_IER_disable(can_handle_t handle, uint32_t interrupt_disable);
 //int32_t drv_can_config_acceptance_filters(can_handle_t handle, uint32_t mode, uint32_t acr, uint32_t amr);
-void show_all_r_reg_CANMOD(can_handle_t handle);
+void show_all_can_r_reg(can_handle_t handle);
+int32_t write_CANIER_reg(can_handle_t handle,  uint8_t reg_val);
+int32_t write_CANMOD_reg(can_handle_t handle, uint8_t reg_val);
+int32_t write_CANBTR1_reg(can_handle_t handle, uint8_t reg_val);
+int32_t write_CANBTR0_reg(can_handle_t handle, uint8_t reg_val);
+int32_t write_CANEWLR_reg(can_handle_t handle, uint8_t reg_val);
+
 
 
 

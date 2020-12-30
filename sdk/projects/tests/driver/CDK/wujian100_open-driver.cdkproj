@@ -193,7 +193,9 @@
         <File Name="../../../../csi_driver/wujian100_open/include/usi_pin_planning.h">
           <FileOption/>
         </File>
-        <File Name="../../../../csi_driver/wujian100_open/include/wj_can.h"/>
+        <File Name="../../../../csi_driver/wujian100_open/include/wj_can.h">
+          <FileOption/>
+        </File>
       </VirtualDirectory>
       <File Name="../../../../csi_driver/wujian100_open/isr.c">
         <FileOption/>
@@ -545,14 +547,17 @@
       </Flash>
     </BuildConfig>
   </BuildConfigs>
+  <MonitorProgress>
+    <DebugLaunch>35</DebugLaunch>
+  </MonitorProgress>
   <DebugSessions>
     <watchExpressions/>
     <memoryExpressions>;;;</memoryExpressions>
     <statistics>;;MHZ</statistics>
     <peripheralTabs/>
-    <WatchDisplayFormat/>
-    <LocalDisplayFormat/>
+    <WatchDisplayFormat>0</WatchDisplayFormat>
+    <LocalDisplayFormat>0</LocalDisplayFormat>
     <debugLayout/>
-    <memoryTabColSizeExpressions/>
+    <memoryTabColSizeExpressions>100:8;100:8;100:8;100:8;</memoryTabColSizeExpressions>
   </DebugSessions>
 </Project>

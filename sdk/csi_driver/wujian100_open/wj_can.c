@@ -13,6 +13,10 @@ extern int32_t target_can_init(int32_t idx, uint32_t *base, uint32_t *irq, void 
 
 
 
+
+
+
+
 typedef struct {
     uint32_t base;
     uint32_t irq;
@@ -50,6 +54,8 @@ typedef struct {
 
 
 #define PRINT_REG_CAN(_reg_str, _reg_val)  do{printf("|%-25s|%#-7x|\n", _reg_str, _reg_val);} while(0);
+#define PRINT_REG_CAN_OFFSET(_reg_str, _reg_val)  do{printf("|%-25s|%#-7x|%#-7lx|\n", _reg_str, _reg_val, (uint32_t)(&_reg_val)-WJ_CAN_BASE);} while(0);
+
 
 
 
@@ -118,7 +124,7 @@ int32_t csi_can_config(can_handle_t handle, can_mode_e mode)
 
     //(wj_can_priv_t *)
 
-	return drv_can_config_mode(handle, mode);
+    return drv_can_config_mode(handle, mode);
 }
 
 
@@ -155,15 +161,19 @@ int32_t drv_can_config_mode(can_handle_t handle, can_mode_e mode)
     wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
     switch (mode) {
         case CAN_MODE_OPERATION:
+            printf("set [CAN_MODE_OPERATION]\n");
             addr->CANMOD &= ~CAN_BIT_RESET_MODE;
             break;
         case CAN_MODE_RESET:
+            printf("set [CAN_MODE_RESET]\n");    
             addr->CANMOD |=  CAN_BIT_RESET_MODE;
             break;
         case CAN_MODE_ACCEPTANCE_SINGLE_FILTER:
+            printf("set [CAN_MODE_ACCEPTANCE_SINGLE_FILTER]\n");    
             addr->CANMOD |=  CAN_BIT_ACCEPTANCE_FILTER_MODE;
             break;
         case CAN_MODE_ACCEPTANCE_DUAL_FILTER:
+            printf("set [CAN_MODE_ACCEPTANCE_DUAL_FILTER]\n");    
             addr->CANMOD &=  CAN_BIT_ACCEPTANCE_FILTER_MODE;
             break;
         default:
@@ -180,7 +190,7 @@ int32_t drv_can_config_clock(can_handle_t handle, uint32_t clkout_enable, uint32
     CAN_NULL_PARAM_CHK(handle);
     wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
     addr->CANCDR  = ((addr->CANCDR & ~0x07)   | (fclk_osc & 0x07));
-    addr->CANCDR  = ((addr->CANCDR & ~(1<<3)) | (clkout_enable & 1<<3));
+    addr->CANCDR  = ((addr->CANCDR & ~(1 << 3)) | (clkout_enable & 1 << 3));
     return 0;
 }
 
@@ -248,7 +258,7 @@ void csi_can_send(can_handle_t pcsi_can, const void *data, uint32_t num)
 
 int32_t csi_can_set_mode(can_handle_t handle, can_mode_e mode)
 {
-	wj_can_priv_t *can_priv = handle;
+    wj_can_priv_t *can_priv = handle;
     CAN_NULL_PARAM_CHK(handle);
 
     if ((int32_t)mode < 0) {
@@ -277,13 +287,12 @@ int32_t drv_can_send(can_handle_t handle, const void *data, uint32_t num)
     wj_can_priv_t *can_priv = handle;
     wj_can_reg_t *addr = (wj_can_reg_t *)(can_priv->base);
 
-	int timeout = 1000000;
-	while (((addr->CANSR & CAN_SR_TRANSMIT_BUFFER_LOCKED) == 0) && (timeout--)); 	// wait transmit buffer free
-	if (timeout < 0)
-	{
-		return ERR_CAN(DRV_ERROR_BUSY);
-	}
-	return 0;
+    int timeout = 1000000;
+    while (((addr->CANSR & CAN_SR_TRANSMIT_BUFFER_LOCKED) == 0) && (timeout--));    // wait transmit buffer free
+    if (timeout < 0) {
+        return ERR_CAN(DRV_ERROR_BUSY);
+    }
+    return 0;
 }
 
 
@@ -292,8 +301,7 @@ int32_t drv_is_transmit_buffer_free(can_handle_t handle)
     int timeout = 1000000;
     wj_can_reg_t *addr = (wj_can_reg_t *)(((wj_can_priv_t *)handle)->base);
     while (((addr->CANSR & CAN_SR_TRANSMIT_BUFFER_LOCKED) == 0) && (timeout--));
-    if (timeout < 0)
-    {
+    if (timeout < 0) {
         return FALSE;
     }
     return TRUE;
@@ -307,54 +315,116 @@ int32_t read_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
     return 0;
 }
 
-int32_t write_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
-{
-    return 0;
-}
-
-int32_t show_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
-{
-    return 0;
-}
-
 void show_reg_CANMOD(can_handle_t handle)
 {
     wj_can_reg_t *addr = get_can_reg_addr_base(handle);
     printf("CANMOD:[%#x]", addr->CANMOD);
 }
 
-void show_all_r_reg_CANMOD(can_handle_t handle)
+
+int32_t show_CANMOD_reg(can_handle_t handle, uint32_t base, uint32_t offset)
 {
+    return 0;
+}
+
+void show_all_can_r_reg(can_handle_t handle)
+{
+    printf("show all readable reg\n");
     wj_can_reg_t *addr = get_can_reg_addr_base(handle);
-    printf("|-------------------------|-------|\n");
-    printf("|Name                     |Value  |\n");
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("CANMOD", addr->CANMOD);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("CANSR",  addr->CANSR);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("CANSR",  addr->CANSR);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("CANSR",  addr->CANIR);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NIER",   addr->CANIER);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NBTR0",  addr->CANBTR0);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NBTR1",  addr->CANBTR1);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NOCR",   addr->CANOCR);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NALC",   addr->CANALC);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NECC",   addr->CANECC);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NTEWLR", addr->CANTEWLR);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NRXERR", addr->CANRXERR);
-    printf("|-------------------------|-------|\n");
-    PRINT_REG_CAN("NTXERR", addr->CANTXERR);
-    printf("|-------------------------|-------|\n");
+    printf("|-------------------------|-------|-------|\n");
+    printf("|Name                     |Value  |offset |\n");
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANMOD", addr->CANMOD);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANSR", addr->CANSR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANIR",  addr->CANIR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANIER", addr->CANIER);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANBTR0", addr->CANBTR0);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANBTR1", addr->CANBTR1);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANOCR", addr->CANOCR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANALC", addr->CANALC);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANECC", addr->CANECC);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANTEWLR", addr->CANEWLR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANRXERR", addr->CANRXERR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANTXERR", addr->CANTXERR);
+    printf("|-------------------------|-------|-------|\n");
+}
+
+void show_all_rw_reg_mode_reset(can_handle_t handle)
+{
+    printf("show all readable reg, in [reset mode]\n");
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    printf("|-------------------------|-------|-------|\n");
+    printf("|Name                     |Value  |offset |\n");
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANMOD", addr->CANMOD);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANIER", addr->CANIER);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANBTR0", addr->CANBTR0);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANBTR1", addr->CANBTR1);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANOCR", addr->CANOCR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANTEWLR", addr->CANEWLR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANRXERR", addr->CANRXERR);
+    printf("|-------------------------|-------|-------|\n");
+    PRINT_REG_CAN_OFFSET("CANTXERR", addr->CANTXERR);
+    printf("|-------------------------|-------|-------|\n");
+}
+
+
+int32_t write_CANIER_reg(can_handle_t handle,  uint8_t reg_val)
+{
+    printf("write [%#x] to [CANIER]\n", reg_val);
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    addr->CANIER = reg_val;
+    return 0;
+}
+
+int32_t write_CANMOD_reg(can_handle_t handle, uint8_t reg_val)
+{
+    printf("write [%#x] to [CANMOD]\n", reg_val);
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    addr->CANMOD = reg_val;
+    return 0;
+}
+
+int32_t write_CANBTR0_reg(can_handle_t handle, uint8_t reg_val)
+{
+    printf("write [%#x] to [CANBTR0]\n", reg_val);
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    addr->CANBTR0 = reg_val;
+    return 0;
+}
+
+int32_t write_CANBTR1_reg(can_handle_t handle, uint8_t reg_val)
+{
+    printf("write [%#x] to [CANBTR1]\n", reg_val);
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    addr->CANBTR1 = reg_val;
+    return 0;
+}
+
+int32_t write_CANEWLR_reg(can_handle_t handle, uint8_t reg_val)
+{
+    printf("write [%#x] to [CANEWLR]\n", reg_val);
+    wj_can_reg_t *addr = get_can_reg_addr_base(handle);
+    addr->CANEWLR = reg_val;
+    return 0;
+
 }
 
 
